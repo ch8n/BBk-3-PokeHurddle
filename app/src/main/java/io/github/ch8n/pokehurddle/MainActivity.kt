@@ -10,11 +10,6 @@ sealed class Action {
     object Berry : Action()
 }
 
-// 10% berry
-// 10% item
-// 60% Idle
-// 30% Pokemon
-
 /***
  *
  *  home screen
@@ -29,6 +24,7 @@ sealed class Action {
  *      -- Pokeball
  *      -- Nothing
  *      -- Pokemon
+ *      -- Money
  *  Pokemon
  *      -- Pet --> berry* & Pokeball*
  *      -- Fight --> Pokeball* & pokemon*
@@ -52,5 +48,4 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
-
 }
