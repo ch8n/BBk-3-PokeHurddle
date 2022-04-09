@@ -11,7 +11,6 @@ sealed class Action {
 }
 
 /***
- *
  *  home screen
  *      --- actions
  *          -- explore ---> encounter
