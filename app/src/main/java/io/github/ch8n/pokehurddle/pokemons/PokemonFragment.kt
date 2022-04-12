@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.bag
+package io.github.ch8n.pokehurddle.pokemons
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import io.github.ch8n.pokehurddle.R
 
 
-class BagFragment : Fragment() {
+class PokemonFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_bag, container, false)
+        return inflater.inflate(R.layout.fragment_pokemon, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -2,6 +2,8 @@ package io.github.ch8n.pokehurddle
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.findNavController
+import io.github.ch8n.pokehurddle.databinding.ActivityMainBinding
 
 sealed class Action {
     object Idle : Action()
@@ -43,8 +45,19 @@ sealed class Action {
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setup()
     }
+
+    private fun setup() = with(binding) {
+        findNavController(R.id.container_nav_host)
+    }
+
+
 }
