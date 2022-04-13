@@ -1,5 +1,6 @@
 package io.github.ch8n.data.repository
 
+import android.util.Log
 import com.google.gson.Gson
 import io.github.ch8n.data.models.*
 import okhttp3.OkHttpClient
@@ -19,19 +20,29 @@ class AppRepository {
             }
         }
 
+    private val pokemonCache = mutableMapOf<Int, PokemonDTO>()
     val randomPokemon: PokemonDTO?
         get() {
             val client = OkHttpClient()
             val randomPokemonIndex = (0..1126).random()
-            val pokemonRequest = Request.Builder()
-                .url("https://pokeapi.co/api/v2/pokemon/$randomPokemonIndex")
-                .build()
-            val response = kotlin.runCatching {
-                val data = client.newCall(pokemonRequest).execute()
-                val jsonString = data.body?.string()
-                Gson().fromJson(jsonString, PokemonDTO::class.java)
+            return pokemonCache.getOrElse(randomPokemonIndex) {
+                val pokemonRequest = Request.Builder()
+                    .url("https://pokeapi.co/api/v2/pokemon/$randomPokemonIndex")
+                    .build()
+                val response = kotlin.runCatching {
+                    val data = client.newCall(pokemonRequest).execute()
+                    val jsonString = data.body?.string()
+                    Gson().fromJson(jsonString, PokemonDTO::class.java)
+                }
+                val pokemonDTO = response.getOrElse {
+                    Log.e("Error", "Pokemon fetch failed", it)
+                    null
+                }
+                pokemonDTO?.let {
+                    pokemonCache.put(randomPokemonIndex, it)
+                }
+                pokemonDTO
             }
-            return response.getOrElse { error(it) }
         }
 
     val randomBerry: Berry

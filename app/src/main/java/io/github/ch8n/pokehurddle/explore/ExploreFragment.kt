@@ -11,7 +11,9 @@ import io.github.ch8n.data.repository.AppRepository
 import io.github.ch8n.pokehurddle.R
 import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
 import io.github.ch8n.setVisible
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 class ExploreFragment : Fragment() {
@@ -35,57 +37,51 @@ class ExploreFragment : Fragment() {
     }
 
     private inline fun FragmentExploreBinding.setup() {
-        lifecycleScope.launchWhenResumed {
-            viewModel.berry.collectLatest {
-                val berry = it ?: return@collectLatest
-                containerPokemon.setVisible(false)
-                Glide.with(requireContext())
-                    .load(berry.sprite)
-                    .into(imgEncounter)
-                labelEncounter.setText("${berry.name.capitalize()} | Qty: ${berry.randomQty} | Rate: ${berry.attractionRate}")
-            }
-
-            viewModel.money.collectLatest {
-                val money = it
-                containerPokemon.setVisible(false)
-                Glide.with(requireContext())
-                    .load(R.drawable.coin)
-                    .into(imgEncounter)
-                labelEncounter.setText("Qty: ${money}")
-            }
-
-            viewModel.pokeball.collectLatest {
-                val pokeball = it ?: return@collectLatest
-                containerPokemon.setVisible(false)
-                Glide.with(requireContext())
-                    .load(pokeball.sprite)
-                    .into(imgEncounter)
-                labelEncounter.setText("${pokeball.name} | Rate: ${pokeball.successRate}")
-            }
-
-            viewModel.pokemon.collectLatest {
-                val pokemon = it ?: return@collectLatest
-                containerPokemon.setVisible(true)
-                Glide.with(requireContext())
-                    .load(pokemon.sprites)
-                    .into(imgEncounter)
-                labelEncounter.setText("${pokemon.name}")
-            }
-
-            viewModel.nothing.collectLatest {
-                if (it == 0) {
-                    return@collectLatest
-                }
-                containerPokemon.setVisible(false)
-                Glide.with(requireContext())
-                    .load(R.drawable.nothing)
-                    .into(imgEncounter)
-                labelEncounter.setText("Nothing happened!")
-            }
-        }
-
         btnGenerate.setOnClickListener {
-            viewModel.generateEncounter()
+            viewModel.generateEncounter(
+                onNothing = {
+                    containerPokemon.setVisible(false)
+                    Glide.with(requireContext())
+                        .load(R.drawable.nothing)
+                        .into(imgEncounter)
+                    labelEncounter.setText("Nothing happened!")
+                },
+                onBerry = {
+                    val berry = it
+                    containerPokemon.setVisible(false)
+                    Glide.with(requireContext())
+                        .load(berry.sprite)
+                        .into(imgEncounter)
+                    labelEncounter.setText("${berry.name.capitalize()} | Qty: ${berry.randomQty} | Rate: ${berry.attractionRate}")
+                },
+                onPokemon = {
+                    val pokemon = it ?: return@generateEncounter
+                    containerPokemon.setVisible(true)
+                    Glide.with(requireContext())
+                        .load(pokemon.sprites.front_default)
+                        .into(imgEncounter)
+                    labelEncounter.setText("${pokemon.name}")
+                },
+                onPokeball = {
+                    val pokeball = it
+                    containerPokemon.setVisible(false)
+                    Glide.with(requireContext())
+                        .load(pokeball.sprite)
+                        .into(imgEncounter)
+                    labelEncounter.setText("${pokeball.name} | Rate: ${pokeball.successRate}")
+                },
+                onMoney = {
+                    val money = it
+                    containerPokemon.setVisible(false)
+                    Glide.with(requireContext())
+                        .load(R.drawable.coin)
+                        .into(imgEncounter)
+                    labelEncounter.setText("Qty: ${money}")
+                },
+                onLoading = { isLoading ->
+                    loader.setVisible(isLoading)
+                }
+            )
         }
     }
 

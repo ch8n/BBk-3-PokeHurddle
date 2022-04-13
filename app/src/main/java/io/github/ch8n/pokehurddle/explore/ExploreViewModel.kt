@@ -12,49 +12,45 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ExploreViewModel(
     private val repository: AppRepository
 ) : ViewModel() {
 
-    private val _pokemon = MutableStateFlow<PokemonDTO?>(null)
-    val pokemon = _pokemon.asStateFlow()
-
-    private val _berry = MutableStateFlow<Berry?>(null)
-    val berry = _berry.asStateFlow()
-
-    private val _pokeball = MutableStateFlow<Pokeball?>(null)
-    val pokeball = _pokeball.asStateFlow()
-
-    private val _money = MutableStateFlow<Int>(0)
-    val money = _money.asStateFlow()
-
-    private val _nothing = MutableStateFlow<Int>(0)
-    val nothing = _nothing.asStateFlow()
-
-    fun generateEncounter() = viewModelScope.launch(Dispatchers.IO) {
+    fun generateEncounter(
+        onBerry: (berry: Berry) -> Unit,
+        onPokeball: (berry: Pokeball) -> Unit,
+        onPokemon: (pokemon: PokemonDTO?) -> Unit,
+        onNothing: () -> Unit,
+        onMoney: (amount: Int) -> Unit,
+        onLoading: (isLoading: Boolean) -> Unit
+    ) = viewModelScope.launch(Dispatchers.Main.immediate) {
+        onLoading.invoke(true)
         val encounter = repository.randomEncounter
         when (encounter) {
             Encounter.Berry -> {
                 delay(1000)
-                _berry.emit(repository.randomBerry)
+                onBerry.invoke(repository.randomBerry)
             }
             Encounter.Money -> {
                 delay(1000)
-                _money.emit((encounter as Encounter.Money).amount)
+                onMoney.invoke((encounter as Encounter.Money).amount)
             }
             Encounter.Nothing -> {
                 delay(1000)
-                _nothing.emit(_nothing.value + 1)
+                onNothing.invoke()
             }
             Encounter.PokeBall -> {
                 delay(1000)
-                _pokeball.emit(repository.randomPokeBall)
+                onPokeball.invoke(repository.randomPokeBall)
             }
             Encounter.Pokemon -> {
-                _pokemon.emit(repository.randomPokemon)
+                val pokemonDTO = withContext(Dispatchers.IO) { repository.randomPokemon }
+                onPokemon.invoke(pokemonDTO)
             }
         }
+        onLoading.invoke(false)
     }
 
 }
