@@ -1,27 +1,48 @@
-package io.github.ch8n.pokehurddle.explore
+package io.github.ch8n.pokehurddle
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.ch8n.data.models.Berry
-import io.github.ch8n.data.models.Encounter
-import io.github.ch8n.data.models.Pokeball
-import io.github.ch8n.data.models.PokemonDTO
-import io.github.ch8n.data.repository.AppRepository
+import io.github.ch8n.pokehurddle.data.models.*
+import io.github.ch8n.pokehurddle.data.repository.AppRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ExploreViewModel(
+class MainViewModel(
     private val repository: AppRepository
 ) : ViewModel() {
+
+    private var _player = Player(
+        berries = emptyList(),
+        pokeballs = emptyList(),
+        pokemon = emptyList(),
+        money = 0
+    )
+
+    fun updatePlayer(
+        playerBerry: PlayerBerry = PlayerBerry.Empty,
+        playerPokeball: PlayerPokeball = PlayerPokeball.Empty,
+        playerPokemon: PokemonDTO = PokemonDTO.Empty,
+        playerMoney: Int = 0
+    ) {
+        val berries = (_player.berries + playerBerry).filter { it.qty != 0 }
+        val pokeball = (_player.pokeballs + playerPokeball).filter { it.qty != 0 }
+        val pokemon = (_player.pokemon + playerPokemon).filter { it.id != 0 }
+        val money = _player.money + playerMoney
+        _player = _player.copy(
+            berries = berries,
+            pokeballs = pokeball,
+            pokemon = pokemon,
+            money = money
+        )
+    }
+
 
     fun generateEncounter(
         onBerry: (berry: Berry) -> Unit,
         onPokeball: (berry: Pokeball) -> Unit,
-        onPokemon: (pokemon: PokemonDTO?) -> Unit,
+        onPokemon: (pokemon: PokemonDTO) -> Unit,
         onNothing: () -> Unit,
         onMoney: (amount: Int) -> Unit,
         onLoading: (isLoading: Boolean) -> Unit

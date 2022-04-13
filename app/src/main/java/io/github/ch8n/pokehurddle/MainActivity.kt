@@ -3,6 +3,7 @@ package io.github.ch8n.pokehurddle
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
+import io.github.ch8n.pokehurddle.data.repository.AppRepository
 import io.github.ch8n.pokehurddle.databinding.ActivityMainBinding
 
 sealed class Action {
@@ -47,6 +48,8 @@ sealed class Action {
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val repository: AppRepository = AppRepository()
+    val sharedViewModel: MainViewModel = MainViewModel(repository)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

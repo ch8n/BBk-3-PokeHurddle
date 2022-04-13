@@ -1,4 +1,4 @@
-package io.github.ch8n.data.models
+package io.github.ch8n.pokehurddle.data.models
 
 import java.util.*
 
@@ -9,6 +9,14 @@ data class Berry(
     val attractionRate: Int
 ) {
     val randomQty: Int get() = (1..10).random()
+
+    companion object {
+        val Empty = Berry(
+            name = "",
+            sprite = "",
+            attractionRate = 0
+        )
+    }
 }
 
 val berries = listOf(

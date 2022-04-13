@@ -1,4 +1,4 @@
-package io.github.ch8n.data.models
+package io.github.ch8n.pokehurddle.data.models
 
 data class PokemonDTO(
     val id: Int,
@@ -8,6 +8,15 @@ data class PokemonDTO(
 ) {
     val attack: Int = stats.first().base_stat
     val health: Int = attack * 100
+
+    companion object {
+        val Empty = PokemonDTO(
+            id = 0,
+            name = "",
+            sprites = Sprites("", ""),
+            stats = emptyList()
+        )
+    }
 }
 
 data class Sprites(

@@ -1,8 +1,8 @@
-package io.github.ch8n.data.repository
+package io.github.ch8n.pokehurddle.data.repository
 
 import android.util.Log
 import com.google.gson.Gson
-import io.github.ch8n.data.models.*
+import io.github.ch8n.pokehurddle.data.models.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -68,4 +68,5 @@ class AppRepository {
                 else -> Encounter.Nothing
             }
         }
+
 }

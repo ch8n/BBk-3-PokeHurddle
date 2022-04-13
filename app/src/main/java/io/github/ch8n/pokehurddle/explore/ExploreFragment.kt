@@ -5,22 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import io.github.ch8n.data.repository.AppRepository
+import io.github.ch8n.pokehurddle.MainActivity
+import io.github.ch8n.pokehurddle.MainViewModel
+import io.github.ch8n.pokehurddle.data.models.PlayerBerry
+import io.github.ch8n.pokehurddle.data.models.PlayerPokeball
 import io.github.ch8n.pokehurddle.R
 import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
 import io.github.ch8n.setVisible
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 class ExploreFragment : Fragment() {
 
     private var binding: FragmentExploreBinding? = null
-    private val repository: AppRepository = AppRepository()
-    private val viewModel: ExploreViewModel = ExploreViewModel(repository)
+    private val viewModel by lazy {
+        (requireActivity() as MainActivity).sharedViewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,18 +48,22 @@ class ExploreFragment : Fragment() {
                 },
                 onBerry = {
                     val berry = it
+                    val qty = berry.randomQty
                     containerPokemon.setVisible(false)
                     Glide.with(requireContext())
                         .load(berry.sprite)
                         .into(imgEncounter)
-                    labelEncounter.setText("${berry.name.capitalize()} | Qty: ${berry.randomQty} | Rate: ${berry.attractionRate}")
+                    viewModel.updatePlayer(playerBerry = PlayerBerry(berry, qty))
+                    labelEncounter.setText("${berry.name.capitalize()} | Qty: ${qty} | Rate: ${berry.attractionRate}")
                 },
                 onPokemon = {
-                    val pokemon = it ?: return@generateEncounter
+                    val pokemon = it
                     containerPokemon.setVisible(true)
                     Glide.with(requireContext())
                         .load(pokemon.sprites.front_default)
                         .into(imgEncounter)
+                    //TODO fix
+                    viewModel.updatePlayer(playerPokemon = pokemon)
                     labelEncounter.setText("${pokemon.name}")
                 },
                 onPokeball = {
@@ -68,6 +72,7 @@ class ExploreFragment : Fragment() {
                     Glide.with(requireContext())
                         .load(pokeball.sprite)
                         .into(imgEncounter)
+                    viewModel.updatePlayer(playerPokeball = PlayerPokeball(pokeball, 1))
                     labelEncounter.setText("${pokeball.name} | Rate: ${pokeball.successRate}")
                 },
                 onMoney = {
@@ -76,6 +81,7 @@ class ExploreFragment : Fragment() {
                     Glide.with(requireContext())
                         .load(R.drawable.coin)
                         .into(imgEncounter)
+                    viewModel.updatePlayer(playerMoney = money)
                     labelEncounter.setText("Qty: ${money}")
                 },
                 onLoading = { isLoading ->

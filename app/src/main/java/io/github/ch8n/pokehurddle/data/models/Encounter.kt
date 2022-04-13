@@ -1,4 +1,4 @@
-package io.github.ch8n.data.models
+package io.github.ch8n.pokehurddle.data.models
 
 sealed class Encounter {
     object Nothing : Encounter()

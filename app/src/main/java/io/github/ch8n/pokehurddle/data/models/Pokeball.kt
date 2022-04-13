@@ -1,4 +1,4 @@
-package io.github.ch8n.data.models
+package io.github.ch8n.pokehurddle.data.models
 
 import java.util.*
 
@@ -7,7 +7,15 @@ data class Pokeball(
     val name: String,
     val successRate: Int,
     val sprite: String,
-)
+) {
+    companion object {
+        val Empty = Pokeball(
+            name = "",
+            successRate = 0,
+            sprite = ""
+        )
+    }
+}
 
 val pokeBalls = listOf(
     Pokeball(
