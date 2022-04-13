@@ -47,7 +47,11 @@ class ExploreViewModel(
             }
             Encounter.Pokemon -> {
                 val pokemonDTO = withContext(Dispatchers.IO) { repository.randomPokemon }
-                onPokemon.invoke(pokemonDTO)
+                if (pokemonDTO != null) {
+                    onPokemon.invoke(pokemonDTO)
+                } else {
+                    onNothing.invoke()
+                }
             }
         }
         onLoading.invoke(false)
