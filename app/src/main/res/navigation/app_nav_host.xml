@@ -5,7 +5,7 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="io.github.ch8n.pokehurddle.home.HomeFragment"
+        android:name="io.github.ch8n.pokehurddle.ui.home.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_exploreFragment"
@@ -22,18 +22,18 @@
     </fragment>
     <fragment
         android:id="@+id/exploreFragment"
-        android:name="io.github.ch8n.pokehurddle.explore.ExploreFragment"
+        android:name="io.github.ch8n.pokehurddle.ui.explore.ExploreFragment"
         android:label="ExploreFragment" />
     <fragment
         android:id="@+id/bagFragment"
-        android:name="io.github.ch8n.pokehurddle.bag.BagFragment"
+        android:name="io.github.ch8n.pokehurddle.ui.bag.BagFragment"
         android:label="BagFragment" />
     <fragment
         android:id="@+id/pokemonFragment"
-        android:name="io.github.ch8n.pokehurddle.pokemons.PokemonFragment"
+        android:name="io.github.ch8n.pokehurddle.ui.pokemons.PokemonFragment"
         android:label="PokemonFragment" />
     <fragment
         android:id="@+id/recoverFragment"
-        android:name="io.github.ch8n.pokehurddle.pokecenter.RecoverFragment"
+        android:name="io.github.ch8n.pokehurddle.ui.pokecenter.RecoverFragment"
         android:label="RecoverFragment" />
 </navigation>

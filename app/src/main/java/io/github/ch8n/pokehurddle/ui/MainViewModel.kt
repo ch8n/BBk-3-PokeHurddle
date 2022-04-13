@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle
+package io.github.ch8n.pokehurddle.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +19,8 @@ class MainViewModel(
         pokemon = emptyList(),
         money = 0
     )
+
+    val player get() = _player
 
     fun updatePlayer(
         playerBerry: PlayerBerry = PlayerBerry.Empty,

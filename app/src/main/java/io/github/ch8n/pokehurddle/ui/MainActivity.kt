@@ -1,8 +1,9 @@
-package io.github.ch8n.pokehurddle
+package io.github.ch8n.pokehurddle.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
+import io.github.ch8n.pokehurddle.R
 import io.github.ch8n.pokehurddle.data.repository.AppRepository
 import io.github.ch8n.pokehurddle.databinding.ActivityMainBinding
 

@@ -16,11 +16,12 @@
         app:srcCompat="@drawable/pokemons" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/label_explore"
+        android:id="@+id/label_pokemon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_regular"
+        android:scrollbars="vertical"
         android:text="Pokemon..."
         android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"

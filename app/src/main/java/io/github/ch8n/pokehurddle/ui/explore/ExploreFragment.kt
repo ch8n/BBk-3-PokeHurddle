@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.explore
+package io.github.ch8n.pokehurddle.ui.explore
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import io.github.ch8n.pokehurddle.MainActivity
-import io.github.ch8n.pokehurddle.MainViewModel
+import io.github.ch8n.pokehurddle.ui.MainActivity
 import io.github.ch8n.pokehurddle.data.models.PlayerBerry
 import io.github.ch8n.pokehurddle.data.models.PlayerPokeball
 import io.github.ch8n.pokehurddle.R

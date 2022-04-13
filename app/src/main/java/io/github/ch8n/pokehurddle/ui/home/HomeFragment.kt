@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.home
+package io.github.ch8n.pokehurddle.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
