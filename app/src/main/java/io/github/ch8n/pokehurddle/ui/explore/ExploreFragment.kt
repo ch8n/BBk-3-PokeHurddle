@@ -64,6 +64,7 @@ class ExploreFragment : Fragment() {
     private fun FragmentExploreBinding.setup() {
 
         btnEscape.setOnClickListener {
+
             fun onEscape(message: String) {
                 containerPokemon.setVisible(false)
                 imgEncounter.setImageResource(R.drawable.escape)
@@ -72,19 +73,11 @@ class ExploreFragment : Fragment() {
 
             viewModel.onEscapePokemon(
                 onLostBerry = {
-                    val qtyMsg = if (it.qty > 0) {
-                        it.qty
-                    } else {
-                        "all"
-                    }
+                    val qtyMsg = if (it.qty > 0) it.qty else "all"
                     onEscape("You dropped $qtyMsg ${it.berry.name} while escaping")
                 },
                 onLostMoney = {
-                    val qtyMsg = if (it > 0) {
-                        it
-                    } else {
-                        "all"
-                    }
+                    val qtyMsg = if (it > 0) it else "all"
                     onEscape("You dropped $qtyMsg Coins while escaping")
                 },
                 onLostPokeball = {
