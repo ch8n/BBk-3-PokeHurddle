@@ -6,6 +6,7 @@ data class PokemonDTO(
     val sprites: Sprites,
     val stats: List<Stat>,
 ) {
+
     val attack: Int = stats.firstOrNull()?.base_stat ?: 0
     val health: Int = attack * 100
 

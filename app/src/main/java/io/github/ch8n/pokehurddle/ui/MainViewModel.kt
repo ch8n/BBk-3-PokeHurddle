@@ -13,6 +13,9 @@ class MainViewModel(
     private val repository: AppRepository
 ) : ViewModel() {
 
+    private var _pokemonEncounter: PokemonDTO = PokemonDTO.Empty
+    val pokemonEncounter get() = _pokemonEncounter
+
     private var _player = Player(
         berries = emptyList(),
         pokeballs = emptyList(),
@@ -71,6 +74,7 @@ class MainViewModel(
             Encounter.Pokemon -> {
                 val pokemonDTO = withContext(Dispatchers.IO) { repository.randomPokemon }
                 if (pokemonDTO != null) {
+                    _pokemonEncounter = pokemonDTO
                     onPokemon.invoke(pokemonDTO)
                 } else {
                     onNothing.invoke()
@@ -114,6 +118,12 @@ class MainViewModel(
                 onLostPokeball(pokeball)
             }
         }
+    }
+
+    private var _isEscapedFromBattleOrPet = false
+    val isEscapedFromBattleOrPet get() = _isEscapedFromBattleOrPet
+    fun setEscapedFromBattleOrPet(isEscaped: Boolean) {
+        _isEscapedFromBattleOrPet = isEscaped
     }
 
 }

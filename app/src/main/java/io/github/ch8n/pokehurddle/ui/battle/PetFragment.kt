@@ -5,18 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import io.github.ch8n.pokehurddle.R
-import io.github.ch8n.pokehurddle.databinding.FragmentBagBinding
 import io.github.ch8n.pokehurddle.databinding.FragmentBattleBinding
+import io.github.ch8n.pokehurddle.databinding.FragmentPetBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
 
 
-class BattleFragment : Fragment() {
-    private var binding: FragmentBattleBinding? = null
+class PetFragment : Fragment() {
+    private var binding: FragmentPetBinding? = null
     private val viewModel by lazy {
         (requireActivity() as MainActivity).sharedViewModel
     }
@@ -26,7 +25,7 @@ class BattleFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentBattleBinding.inflate(inflater, container, false)
+        binding = FragmentPetBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
@@ -35,7 +34,7 @@ class BattleFragment : Fragment() {
         binding?.run { setup() }
     }
 
-    private inline fun FragmentBattleBinding.setup() {
+    private inline fun FragmentPetBinding.setup() {
 
         Glide.with(requireContext())
             .load(viewModel.pokemonEncounter.sprites.front_default)
@@ -43,7 +42,7 @@ class BattleFragment : Fragment() {
 
         labelPokemon.setText(
             """
-            battle --> ${viewModel.pokemonEncounter.name}
+            Pet --> ${viewModel.pokemonEncounter.name}
         """.trimIndent()
         )
 
@@ -57,5 +56,4 @@ class BattleFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
-
 }
