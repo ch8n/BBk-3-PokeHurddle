@@ -80,4 +80,40 @@ class MainViewModel(
         onLoading.invoke(false)
     }
 
+    fun onEscapePokemon(
+        onLostMoney: (amount: Int) -> Unit,
+        onLostBerry: (berry: PlayerBerry) -> Unit,
+        onLostPokeball: (pokeball: PlayerPokeball) -> Unit,
+        onEscapeNoLoss: () -> Unit,
+    ) {
+        val lostAmount = (1..5).random()
+        when ((0..2).random()) {
+            0 -> {
+                if (player.money == 0) {
+                    return onEscapeNoLoss.invoke()
+                }
+                var amount = _player.money - lostAmount
+                if (amount < 0) amount = 0
+                updatePlayer(playerMoney = amount)
+                onLostMoney(lostAmount)
+            }
+            1 -> {
+                var berry = _player.berries.randomOrNull() ?: return onEscapeNoLoss.invoke()
+                var amount = berry.qty - lostAmount
+                if (amount < 0) amount = 0
+                berry = berry.copy(qty = amount)
+                updatePlayer(playerBerry = berry)
+                onLostBerry(berry)
+            }
+            2 -> {
+                var pokeball = _player.pokeballs.randomOrNull() ?: return onEscapeNoLoss.invoke()
+                var amount = pokeball.qty - 1
+                if (amount < 0) amount = 0
+                pokeball = pokeball.copy(qty = amount)
+                updatePlayer(playerPokeball = pokeball)
+                onLostPokeball(pokeball)
+            }
+        }
+    }
+
 }

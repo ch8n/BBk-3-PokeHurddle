@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import io.github.ch8n.pokehurddle.ui.MainActivity
 import io.github.ch8n.pokehurddle.data.models.PlayerBerry
@@ -35,7 +36,7 @@ class ExploreFragment : Fragment() {
         binding?.run { setup() }
     }
 
-    private inline fun FragmentExploreBinding.setup() {
+    private fun FragmentExploreBinding.setup() {
         btnGenerate.setOnClickListener {
             viewModel.generateEncounter(
                 onNothing = {
@@ -61,7 +62,33 @@ class ExploreFragment : Fragment() {
                     Glide.with(requireContext())
                         .load(pokemon.sprites.front_default)
                         .into(imgEncounter)
-                    //TODO fix
+
+                    btnEscape.setOnClickListener {
+
+                        fun onEscape(message: String) {
+                            containerPokemon.setVisible(false)
+                            imgEncounter.setImageResource(R.drawable.escape)
+                            labelEncounter.setText(message)
+                        }
+
+                        viewModel.onEscapePokemon(
+                            onLostBerry = {
+                                val qtyMsg = if (it.qty > 0) { it.qty } else { "all" }
+                                onEscape("You dropped $qtyMsg ${it.berry.name} while escaping")
+                            },
+                            onLostMoney = {
+                                val qtyMsg = if (it > 0) { it } else { "all" }
+                                onEscape("You dropped $qtyMsg Coins while escaping")
+                            },
+                            onLostPokeball = {
+                                onEscape("You dropped ${it.pokeball.name} while escaping")
+                            },
+                            onEscapeNoLoss = {
+                                onEscape("You escaped!...")
+                            }
+                        )
+                    }
+
                     viewModel.updatePlayer(playerPokemon = pokemon)
                     labelEncounter.setText("${pokemon.name}")
                 },

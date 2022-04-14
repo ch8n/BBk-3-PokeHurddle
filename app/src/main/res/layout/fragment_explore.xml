@@ -40,6 +40,7 @@
         app:layout_constraintTop_toBottomOf="@id/label_encounter">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_pet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -49,15 +50,17 @@
             android:text="Pet" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_fight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:fontFamily="@font/poppins_regular"
-            android:text="Attack" />
+            android:text="Fight" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_escape"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
