@@ -2,21 +2,24 @@ package io.github.ch8n.pokehurddle.data.repository
 
 import android.util.Log
 import com.google.gson.Gson
-import io.github.ch8n.pokehurddle.data.models.*
+import io.github.ch8n.pokehurddle.data.models.Berries
+import io.github.ch8n.pokehurddle.data.models.Encounter
+import io.github.ch8n.pokehurddle.data.models.Pokeballs
+import io.github.ch8n.pokehurddle.data.models.PokemonDTO
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
 class AppRepository {
 
-    val randomPokeBall: Pokeball
+    val randomPokeBall: Pokeballs
         get() {
             val randomIndex = (0..100).random()
             return when (randomIndex) {
-                in 0..10 -> pokeBalls.last()
-                in 10..25 -> pokeBalls.get(3)
-                in 25..55 -> pokeBalls.get(2)
-                in 55..75 -> pokeBalls.get(1)
-                else -> pokeBalls.first()
+                in 0..10 -> Pokeballs.MasterBall
+                in 10..25 -> Pokeballs.UltraBall
+                in 25..55 -> Pokeballs.GreatBall
+                in 55..75 -> Pokeballs.LuxuryBall
+                else -> Pokeballs.PokeBall
             }
         }
 
@@ -45,15 +48,15 @@ class AppRepository {
             }
         }
 
-    val randomBerry: Berry
+    val randomBerry: Berries
         get() {
             val randomIndex = (0..100).random()
             return when (randomIndex) {
-                in 0..10 -> berries.last()
-                in 10..25 -> berries.get(3)
-                in 25..55 -> berries.get(2)
-                in 55..75 -> berries.get(1)
-                else -> berries.first()
+                in 0..10 -> Berries.GrepaBerry
+                in 10..25 -> Berries.HondewBerry
+                in 25..55 -> Berries.QualotBerry
+                in 55..75 -> Berries.KelpsyBerry
+                else -> Berries.PomegBerry
             }
         }
 

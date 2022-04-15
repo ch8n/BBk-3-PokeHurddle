@@ -35,10 +35,10 @@ class BagFragment : Fragment() {
     private inline fun FragmentBagBinding.setup() {
         labelItem.setText(
             """
-            berries :\n ${viewModel.player.berries.joinToString(separator = "\n")}
+            berries :\n ${viewModel.player.value?.berries}
             -----
             -----
-            pokeballs:\n ${viewModel.player.pokeballs.joinToString(separator = "\n")}
+            pokeballs:\n ${viewModel.player.value?.pokeballs}
         """.trimIndent()
         )
     }

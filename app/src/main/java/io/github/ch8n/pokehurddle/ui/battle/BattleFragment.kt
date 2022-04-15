@@ -36,14 +36,18 @@ class BattleFragment : Fragment() {
     }
 
     private inline fun FragmentBattleBinding.setup() {
+        // --- TODO 10 second timer ---
+        // choose pokeball
+        // tap on screen to reduce health
+        //
 
         Glide.with(requireContext())
-            .load(viewModel.pokemonEncounter.sprites.front_default)
+            .load(viewModel.pokemonEncounter?.sprites?.front_default)
             .into(imgPokemon)
 
         labelPokemon.setText(
             """
-            battle --> ${viewModel.pokemonEncounter.name}
+            battle --> ${viewModel.pokemonEncounter?.name}
         """.trimIndent()
         )
 

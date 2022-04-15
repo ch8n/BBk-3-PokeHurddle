@@ -1,19 +1,16 @@
 package io.github.ch8n.pokehurddle.ui.explore
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavOptions
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import io.github.ch8n.pokehurddle.ui.MainActivity
-import io.github.ch8n.pokehurddle.data.models.PlayerBerry
-import io.github.ch8n.pokehurddle.data.models.PlayerPokeball
 import io.github.ch8n.pokehurddle.R
 import io.github.ch8n.pokehurddle.data.models.PokemonDTO
 import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
+import io.github.ch8n.pokehurddle.ui.MainActivity
 import io.github.ch8n.setVisible
 
 
@@ -43,7 +40,7 @@ class ExploreFragment : Fragment() {
         if (viewModel.isEscapedFromBattleOrPet) {
             viewModel.setEscapedFromBattleOrPet(false)
             binding?.run {
-                val pokemon = viewModel.pokemonEncounter
+                val pokemon = viewModel.pokemonEncounter ?: return@run
                 // TODO fix state not retained
                 displayPokemon(pokemon)
                 binding?.btnEscape?.performClick()
@@ -61,27 +58,25 @@ class ExploreFragment : Fragment() {
         labelEncounter.setText("${pokemon.name}")
     }
 
-    private fun FragmentExploreBinding.setup() {
+    fun onEscape(message: String) = binding?.run {
+        containerPokemon.setVisible(false)
+        imgEncounter.setImageResource(R.drawable.escape)
+        labelEncounter.setText(message)
+    }
+
+    private inline fun FragmentExploreBinding.setup() {
 
         btnEscape.setOnClickListener {
-
-            fun onEscape(message: String) {
-                containerPokemon.setVisible(false)
-                imgEncounter.setImageResource(R.drawable.escape)
-                labelEncounter.setText(message)
-            }
-
             viewModel.onEscapePokemon(
-                onLostBerry = {
-                    val qtyMsg = if (it.qty > 0) it.qty else "all"
-                    onEscape("You dropped $qtyMsg ${it.berry.name} while escaping")
+                onLostBerry = { berry, amount ->
+                    onEscape("You dropped $amount ${berry.name} while escaping")
                 },
                 onLostMoney = {
                     val qtyMsg = if (it > 0) it else "all"
                     onEscape("You dropped $qtyMsg Coins while escaping")
                 },
                 onLostPokeball = {
-                    onEscape("You dropped ${it.pokeball.name} while escaping")
+                    onEscape("You dropped ${it.name} while escaping")
                 },
                 onEscapeNoLoss = {
                     onEscape("You escaped!...")
@@ -90,15 +85,15 @@ class ExploreFragment : Fragment() {
         }
 
         btnFight.setOnClickListener {
-            val pokemon = viewModel.pokemonEncounter
+            val pokemon = viewModel.pokemonEncounter ?: return@setOnClickListener
             findNavController().navigate(R.id.action_exploreFragment_to_battleFragment)
-            viewModel.updatePlayer(playerPokemon = pokemon)
+            viewModel.updatePlayer(pokemon = pokemon)
         }
 
         btnPet.setOnClickListener {
-            val pokemon = viewModel.pokemonEncounter
+            val pokemon = viewModel.pokemonEncounter ?: return@setOnClickListener
             findNavController().navigate(R.id.action_exploreFragment_to_petFragment)
-            viewModel.updatePlayer(playerPokemon = pokemon)
+            viewModel.updatePlayer(pokemon = pokemon)
         }
 
 
@@ -113,12 +108,13 @@ class ExploreFragment : Fragment() {
                 },
                 onBerry = {
                     val berry = it
-                    val qty = berry.randomQty
+                    berry.generateRandomBerries()
+                    val qty = berry.qty
                     containerPokemon.setVisible(false)
                     Glide.with(requireContext())
                         .load(berry.sprite)
                         .into(imgEncounter)
-                    viewModel.updatePlayer(playerBerry = PlayerBerry(berry, qty))
+                    viewModel.updatePlayer(berries = berry)
                     labelEncounter.setText("${berry.name.capitalize()} | Qty: ${qty} | Rate: ${berry.attractionRate}")
                 },
                 onPokemon = {
@@ -131,7 +127,7 @@ class ExploreFragment : Fragment() {
                     Glide.with(requireContext())
                         .load(pokeball.sprite)
                         .into(imgEncounter)
-                    viewModel.updatePlayer(playerPokeball = PlayerPokeball(pokeball, 1))
+                    viewModel.updatePlayer(pokeballs = pokeball)
                     labelEncounter.setText("${pokeball.name} | Rate: ${pokeball.successRate}")
                 },
                 onMoney = {
@@ -140,7 +136,7 @@ class ExploreFragment : Fragment() {
                     Glide.with(requireContext())
                         .load(R.drawable.coin)
                         .into(imgEncounter)
-                    viewModel.updatePlayer(playerMoney = money)
+                    viewModel.updatePlayer(money = money)
                     labelEncounter.setText("Qty: ${money}")
                 },
                 onLoading = { isLoading ->

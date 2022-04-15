@@ -6,9 +6,8 @@ data class PokemonDTO(
     val sprites: Sprites,
     val stats: List<Stat>,
 ) {
-
-    val attack: Int = stats.firstOrNull()?.base_stat ?: 0
-    val health: Int = attack * 100
+    val attack: Int get() = stats.firstOrNull()?.base_stat ?: 0
+    val health: Int get() = attack * 100
 
     companion object {
         val Empty = PokemonDTO(

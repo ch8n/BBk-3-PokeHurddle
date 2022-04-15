@@ -64,4 +64,12 @@ dependencies {
     def glide_version = "4.13.0"
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
+
+    def room_version = "2.4.2"
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+
+    def flex_box_version = "3.0.0"
+    implementation "com.google.android.flexbox:flexbox:$flex_box_version"
 }

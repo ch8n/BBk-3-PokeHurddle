@@ -1,12 +1,10 @@
 package io.github.ch8n.pokehurddle.ui.pokemons
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.github.ch8n.pokehurddle.R
-import io.github.ch8n.pokehurddle.databinding.FragmentHealthBinding
+import androidx.fragment.app.Fragment
 import io.github.ch8n.pokehurddle.databinding.FragmentPokemonBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
 
@@ -35,7 +33,7 @@ class PokemonFragment : Fragment() {
     private inline fun FragmentPokemonBinding.setup() {
         labelPokemon.setText(
             """
-            pokemon :\n ${viewModel.player.pokemon.joinToString(separator = "\n")}
+            pokemon :\n ${viewModel.player?.value?.pokemon?.joinToString(separator = "\n")}
         """.trimIndent()
         )
     }

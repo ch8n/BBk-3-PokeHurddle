@@ -1,46 +1,39 @@
 package io.github.ch8n.pokehurddle.data.models
 
-import java.util.*
-
-data class Pokeball(
-    val id: String = UUID.randomUUID().toString(),
+sealed class Pokeballs(
     val name: String,
     val successRate: Int,
     val sprite: String,
 ) {
-    companion object {
-        val Empty = Pokeball(
-            name = "",
-            successRate = 0,
-            sprite = ""
-        )
-    }
-}
-
-val pokeBalls = listOf(
-    Pokeball(
+    object MasterBall : Pokeballs(
         name = "Master-Ball",
         successRate = 100,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"
-    ),
-    Pokeball(
+    )
+
+    object UltraBall : Pokeballs(
         name = "Ultra-ball",
         successRate = 80,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png"
-    ),
-    Pokeball(
+    )
+
+    object GreatBall : Pokeballs(
         name = "Great-ball",
         successRate = 60,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png"
-    ),
-    Pokeball(
+    )
+
+    object LuxuryBall : Pokeballs(
         name = "Luxury-Ball",
         successRate = 40,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png"
-    ),
-    Pokeball(
+    )
+
+    object PokeBall : Pokeballs(
         name = "Poke-Ball",
         successRate = 20,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png"
-    ),
-).reversed()
+    )
+
+    object Empty : Pokeballs(name = "", sprite = "", successRate = 0)
+}

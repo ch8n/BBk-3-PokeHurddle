@@ -35,7 +35,7 @@ class RecoverFragment : Fragment() {
     private inline fun FragmentHealthBinding.setup() {
         labelRecover.setText(
             """
-            Amount : ${viewModel.player.money}
+            Amount : ${viewModel.player?.value?.money}
         """.trimIndent()
         )
     }

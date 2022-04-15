@@ -1,5 +1,7 @@
 package io.github.ch8n.pokehurddle.ui
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.ch8n.pokehurddle.data.models.*
@@ -8,45 +10,73 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.max
 
 class MainViewModel(
     private val repository: AppRepository
 ) : ViewModel() {
 
-    private var _pokemonEncounter: PokemonDTO = PokemonDTO.Empty
-    val pokemonEncounter get() = _pokemonEncounter
+    private var _pokemonEncounter: PokemonDTO? = null
+    val pokemonEncounter: PokemonDTO? get() = _pokemonEncounter
 
-    private var _player = Player(
-        berries = emptyList(),
-        pokeballs = emptyList(),
-        pokemon = emptyList(),
-        money = 0
-    )
-
-    val player get() = _player
+    private val _player = MutableLiveData(Player.Empty)
+    val player: LiveData<Player> = _player
 
     fun updatePlayer(
-        playerBerry: PlayerBerry = PlayerBerry.Empty,
-        playerPokeball: PlayerPokeball = PlayerPokeball.Empty,
-        playerPokemon: PokemonDTO = PokemonDTO.Empty,
-        playerMoney: Int = 0
-    ) {
-        val berries = (_player.berries + playerBerry).filter { it.qty != 0 }
-        val pokeball = (_player.pokeballs + playerPokeball).filter { it.qty != 0 }
-        val pokemon = (_player.pokemon + playerPokemon).filter { it.id != 0 }
-        val money = _player.money + playerMoney
-        _player = _player.copy(
-            berries = berries,
-            pokeballs = pokeball,
-            pokemon = pokemon,
-            money = money
+        berries: Berries = Berries.Empty,
+        pokeballs: Pokeballs = Pokeballs.Empty,
+        pokemon: PokemonDTO = PokemonDTO.Empty,
+        money: Int = 0
+    ) = viewModelScope.launch(Dispatchers.IO) {
+
+        val playerStats = _player.value ?: return@launch
+
+        // update berries
+        val previousBerryQty = playerStats.berries.get(berries) ?: 0
+        val updatedBerries = if (berries !is Berries.Empty) {
+            playerStats.berries.toMutableMap().apply {
+                put(berries, previousBerryQty + berries.qty)
+            }
+        } else {
+            playerStats.berries
+        }
+
+        // update pokeballs
+        val previousBallsQty = playerStats.pokeballs.get(pokeballs) ?: 0
+        val updatedBalls = if (pokeballs !is Pokeballs.Empty) {
+            playerStats.pokeballs.toMutableMap().apply {
+                put(pokeballs, previousBallsQty + 1)
+            }
+        } else {
+            playerStats.pokeballs
+        }
+
+        // update money
+        val updateMoney = playerStats.money + money
+
+        // update pokemon
+        val updatedPokemons = if (pokemon != PokemonDTO.Empty) {
+            playerStats.pokemon.toMutableList().apply {
+                add(pokemon)
+            }
+        } else {
+            playerStats.pokemon
+        }
+
+        // update player stats
+        val updatedStats = playerStats.copy(
+            berries = updatedBerries,
+            pokeballs = updatedBalls,
+            pokemon = updatedPokemons,
+            money = updateMoney
         )
+
+        _player.postValue(updatedStats)
     }
 
-
     fun generateEncounter(
-        onBerry: (berry: Berry) -> Unit,
-        onPokeball: (berry: Pokeball) -> Unit,
+        onBerry: (berry: Berries) -> Unit,
+        onPokeball: (berry: Pokeballs) -> Unit,
         onPokemon: (pokemon: PokemonDTO) -> Unit,
         onNothing: () -> Unit,
         onMoney: (amount: Int) -> Unit,
@@ -86,36 +116,43 @@ class MainViewModel(
 
     fun onEscapePokemon(
         onLostMoney: (amount: Int) -> Unit,
-        onLostBerry: (berry: PlayerBerry) -> Unit,
-        onLostPokeball: (pokeball: PlayerPokeball) -> Unit,
+        onLostBerry: (berry: Berries, amount: Int) -> Unit,
+        onLostPokeball: (pokeball: Pokeballs) -> Unit,
         onEscapeNoLoss: () -> Unit,
     ) {
+        val player = _player.value ?: return
         val lostAmount = (1..5).random()
         when ((0..2).random()) {
             0 -> {
                 if (player.money == 0) {
                     return onEscapeNoLoss.invoke()
                 }
-                var amount = _player.money - lostAmount
+                var amount = player.money - lostAmount
                 if (amount < 0) amount = 0
-                updatePlayer(playerMoney = amount)
+                updatePlayer(money = amount)
                 onLostMoney(lostAmount)
             }
             1 -> {
-                var berry = _player.berries.randomOrNull() ?: return onEscapeNoLoss.invoke()
-                var amount = berry.qty - lostAmount
-                if (amount < 0) amount = 0
-                berry = berry.copy(qty = amount)
-                updatePlayer(playerBerry = berry)
-                onLostBerry(berry)
+                val randomPlayerBerry = player.berries.toList().randomOrNull()
+                    ?: return onEscapeNoLoss.invoke()
+                val updatedBerryQty = max(randomPlayerBerry.second - lostAmount, 0)
+                val updatedPlayerBerries = player.berries.toMutableMap().apply {
+                    put(randomPlayerBerry.first, updatedBerryQty)
+                }
+                val updatedPlayer = player.copy(berries = updatedPlayerBerries)
+                _player.postValue(updatedPlayer)
+                onLostBerry(randomPlayerBerry.first, lostAmount)
             }
             2 -> {
-                var pokeball = _player.pokeballs.randomOrNull() ?: return onEscapeNoLoss.invoke()
-                var amount = pokeball.qty - 1
-                if (amount < 0) amount = 0
-                pokeball = pokeball.copy(qty = amount)
-                updatePlayer(playerPokeball = pokeball)
-                onLostPokeball(pokeball)
+                val randomPlayerPokeball = player.pokeballs.toList().randomOrNull()
+                    ?: return onEscapeNoLoss.invoke()
+                val updatedQty = max(randomPlayerPokeball.second - 1, 0)
+                val updatedPlayerPokeballs = player.pokeballs.toMutableMap().apply {
+                    put(randomPlayerPokeball.first, updatedQty)
+                }
+                val updatedPlayer = player.copy(pokeballs = updatedPlayerPokeballs)
+                _player.postValue(updatedPlayer)
+                onLostPokeball(randomPlayerPokeball.first)
             }
         }
     }
