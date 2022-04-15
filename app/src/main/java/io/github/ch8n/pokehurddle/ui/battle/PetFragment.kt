@@ -96,38 +96,51 @@ class PetFragment : Fragment() {
         chipBerryPomeg.setOnClickListener {
             val pomeg = Berries.PomegBerry
             val percent = pokemonInBattle.health / pomeg.attractionRate
-            percent.toString().toast()
-            progressLove.progress = progressLove.progress + percent
+            updateStatus(percent)
         }
 
         chipBerryKelpsy.setOnClickListener {
             val kelpsy = Berries.KelpsyBerry
             val percent = pokemonInBattle.health / kelpsy.attractionRate
-            percent.toString().toast()
-            progressLove.progress = progressLove.progress + percent
+            updateStatus(percent)
         }
 
         chipBerryQualot.setOnClickListener {
             val qualot = Berries.QualotBerry
             val percent = pokemonInBattle.health / qualot.attractionRate
-            percent.toString().toast()
-            progressLove.progress = progressLove.progress + percent
+            updateStatus(percent)
         }
 
         chipBerryHondew.setOnClickListener {
             val hondew = Berries.HondewBerry
             val percent = pokemonInBattle.health / hondew.attractionRate
-            percent.toString().toast()
-            progressLove.progress = progressLove.progress + percent
+            updateStatus(percent)
         }
 
         chipBerryGrepa.setOnClickListener {
             val grepa = Berries.GrepaBerry
             val percent = pokemonInBattle.health / grepa.attractionRate
-            percent.toString().toast()
-            progressLove.progress = progressLove.progress + percent
+            updateStatus(percent)
         }
 
+    }
+
+    private fun updateStatus(percent: Int) = binding?.run {
+        val likeness = randomLikeness(percent)
+        val likenessMessage = if (likeness > 0) {
+            "Great! loved it..."
+        } else {
+            "Yukk.. its sour.."
+        }
+        ("$likenessMessage $likeness").toString().toast()
+        progressLove.progress = progressLove.progress + likeness
+    }
+
+    fun randomLikeness(amount: Int): Int {
+        return when ((1..100).random()) {
+            in 70..100 -> -1 * (amount / 2)
+            else -> amount
+        }
     }
 
     private var toast: Toast? = null
