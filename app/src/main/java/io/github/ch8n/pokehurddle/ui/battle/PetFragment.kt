@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import io.github.ch8n.pokehurddle.data.models.Berries
+import io.github.ch8n.pokehurddle.data.models.Pokeballs
 import io.github.ch8n.pokehurddle.databinding.FragmentPetBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
+import io.github.ch8n.setVisible
 
 
 class PetFragment : Fragment() {
@@ -65,19 +67,50 @@ class PetFragment : Fragment() {
 
     private inline fun FragmentPetBinding.setup() {
         // TODO --> player invertory observing
-        // if out of berry end session
-        // select pokeball on session end
-        // calculate catch rate
+        // inventory based berry
         // if sucess add to db
         // else pokemon escape
+
         val pokemonInBattle = viewModel.pokemonEncounter ?: return
+
+        viewModel.player.observe(viewLifecycleOwner) {
+            val player = it ?: return@observe
+
+            player.berries.forEach { (berry, qty) ->
+                when (berry) {
+                    Berries.Empty -> {}
+                    Berries.GrepaBerry -> chipBerryGrepa.text = "${berry.name} x${qty}"
+                    Berries.HondewBerry -> chipBerryHondew.text = "${berry.name} x${qty}"
+                    Berries.KelpsyBerry -> chipBerryKelpsy.text = "${berry.name} x${qty}"
+                    Berries.PomegBerry -> chipBerryPomeg.text = "${berry.name} x${qty}"
+                    Berries.QualotBerry -> chipBerryQualot.text = "${berry.name} x${qty}"
+                }
+            }
+
+            player.pokeballs.forEach { (ball, qty) ->
+                when (ball) {
+                    Pokeballs.Empty -> {}
+                    Pokeballs.GreatBall -> chipBallGreat.text = "${ball.name} x${qty}"
+                    Pokeballs.LuxuryBall -> chipBallLuxury.text = "${ball.name} x${qty}"
+                    Pokeballs.MasterBall -> chipBallMaster.text = "${ball.name} x${qty}"
+                    Pokeballs.PokeBall -> chipBallPoke.text = "${ball.name} x${qty}"
+                    Pokeballs.UltraBall -> chipBallUltra.text = "${ball.name} x${qty}"
+                }
+            }
+
+            val isBerriesEmpty = player.berries.values.all { it == 0 }
+            if (isBerriesEmpty) {
+                containerBerries.setVisible(false)
+                containerPokeball.setVisible(true)
+            }
+
+        }
 
         startPetTimer(
             onSessionOver = {
                 Toast.makeText(requireContext(), "Session over", Toast.LENGTH_SHORT).show()
-                //TODO continiue
-//                containerBerries.setVisible(false)
-//                containerPokeball.setVisible(true)
+                containerBerries.setVisible(false)
+                containerPokeball.setVisible(true)
             }
         )
 
@@ -93,36 +126,52 @@ class PetFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        chipBerryPomeg.setOnClickListener {
-            val pomeg = Berries.PomegBerry
-            val percent = pokemonInBattle.health / pomeg.attractionRate
-            updateStatus(percent)
-        }
-
-        chipBerryKelpsy.setOnClickListener {
-            val kelpsy = Berries.KelpsyBerry
-            val percent = pokemonInBattle.health / kelpsy.attractionRate
-            updateStatus(percent)
-        }
-
-        chipBerryQualot.setOnClickListener {
-            val qualot = Berries.QualotBerry
-            val percent = pokemonInBattle.health / qualot.attractionRate
-            updateStatus(percent)
-        }
-
-        chipBerryHondew.setOnClickListener {
-            val hondew = Berries.HondewBerry
-            val percent = pokemonInBattle.health / hondew.attractionRate
-            updateStatus(percent)
-        }
-
         chipBerryGrepa.setOnClickListener {
             val grepa = Berries.GrepaBerry
             val percent = pokemonInBattle.health / grepa.attractionRate
             updateStatus(percent)
         }
 
+        val berriresChip = listOf(
+            chipBerryPomeg to Berries.PomegBerry,
+            chipBerryKelpsy to Berries.KelpsyBerry,
+            chipBerryQualot to Berries.QualotBerry,
+            chipBerryHondew to Berries.HondewBerry,
+            chipBerryGrepa to Berries.GrepaBerry,
+        )
+
+        berriresChip.forEach { (chip, berry) ->
+            chip.setOnClickListener {
+                val percent = pokemonInBattle.health / berry.attractionRate
+                updateStatus(percent)
+            }
+        }
+
+        val ballsChips = listOf(
+            chipBallPoke to Pokeballs.PokeBall,
+            chipBallLuxury to Pokeballs.LuxuryBall,
+            chipBallGreat to Pokeballs.GreatBall,
+            chipBallUltra to Pokeballs.UltraBall,
+            chipBallMaster to Pokeballs.MasterBall,
+        )
+
+        ballsChips.forEach { (chip, ball) ->
+            chip.setOnClickListener {
+                catchSuccess(ball)
+            }
+        }
+
+    }
+
+    private fun FragmentPetBinding.catchSuccess(ball: Pokeballs) {
+        val fillPercent = (progressLove.progress.toFloat() / progressLove.max.toFloat()) * 100
+        val isCaptured = (100 - fillPercent) <= ball.successRate
+        val msg = if (isCaptured) {
+            "Gotcha!!"
+        } else {
+            "Pokemon Ran away!"
+        }
+        msg.toast()
     }
 
     private fun updateStatus(percent: Int) = binding?.run {
