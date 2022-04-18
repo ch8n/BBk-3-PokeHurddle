@@ -25,9 +25,6 @@
         android:name="io.github.ch8n.pokehurddle.ui.explore.ExploreFragment"
         android:label="ExploreFragment" >
         <action
-            android:id="@+id/action_exploreFragment_to_battleFragment"
-            app:destination="@id/battleFragment" />
-        <action
             android:id="@+id/action_exploreFragment_to_petFragment"
             app:destination="@id/petFragment" />
     </fragment>
@@ -43,10 +40,6 @@
         android:id="@+id/recoverFragment"
         android:name="io.github.ch8n.pokehurddle.ui.pokecenter.RecoverFragment"
         android:label="RecoverFragment" />
-    <fragment
-        android:id="@+id/battleFragment"
-        android:name="io.github.ch8n.pokehurddle.ui.battle.BattleFragment"
-        android:label="BattleFragment" />
     <fragment
         android:id="@+id/petFragment"
         android:name="io.github.ch8n.pokehurddle.ui.battle.PetFragment"

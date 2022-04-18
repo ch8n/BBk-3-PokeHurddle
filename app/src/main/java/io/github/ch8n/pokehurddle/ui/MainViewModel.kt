@@ -163,4 +163,8 @@ class MainViewModel(
         _isEscapedFromBattleOrPet = isEscaped
     }
 
+    fun resetEncounterPokemon() {
+        _pokemonEncounter = null
+    }
+
 }

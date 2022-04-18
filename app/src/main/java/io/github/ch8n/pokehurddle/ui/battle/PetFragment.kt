@@ -122,8 +122,7 @@ class PetFragment : Fragment() {
         progressLove.max = pokemonInBattle.health
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            viewModel.setEscapedFromBattleOrPet(true)
-            findNavController().popBackStack()
+            exitPetting(isPlayerExiting = true)
         }
 
         chipBerryGrepa.setOnClickListener {
@@ -163,6 +162,14 @@ class PetFragment : Fragment() {
 
     }
 
+    private fun exitPetting(isPlayerExiting: Boolean) {
+        viewModel.setEscapedFromBattleOrPet(isPlayerExiting)
+        if (!isPlayerExiting) {
+            viewModel.resetEncounterPokemon()
+        }
+        findNavController().popBackStack()
+    }
+
     private fun FragmentPetBinding.catchSuccess(ball: Pokeballs) {
         val fillPercent = (progressLove.progress.toFloat() / progressLove.max.toFloat()) * 100
         val isCaptured = (100 - fillPercent) <= ball.successRate
@@ -172,6 +179,7 @@ class PetFragment : Fragment() {
             "Pokemon Ran away!"
         }
         msg.toast()
+        exitPetting(isPlayerExiting = false)
     }
 
     private fun updateStatus(percent: Int) = binding?.run {

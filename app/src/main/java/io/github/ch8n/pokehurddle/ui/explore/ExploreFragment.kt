@@ -84,12 +84,6 @@ class ExploreFragment : Fragment() {
             )
         }
 
-        btnFight.setOnClickListener {
-            val pokemon = viewModel.pokemonEncounter ?: return@setOnClickListener
-            findNavController().navigate(R.id.action_exploreFragment_to_battleFragment)
-            viewModel.updatePlayer(pokemon = pokemon)
-        }
-
         btnPet.setOnClickListener {
             val pokemon = viewModel.pokemonEncounter ?: return@setOnClickListener
             findNavController().navigate(R.id.action_exploreFragment_to_petFragment)
