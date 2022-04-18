@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -33,7 +32,7 @@
         android:id="@+id/img_bag"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="80dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -60,7 +59,7 @@
         android:layout_marginBottom="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="80dp"
         app:srcCompat="@drawable/pokemons" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -74,29 +73,6 @@
         app:layout_constraintEnd_toEndOf="@id/img_pokemon"
         app:layout_constraintStart_toStartOf="@id/img_pokemon"
         app:layout_constraintTop_toBottomOf="@id/img_pokemon" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_pokecenter"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/pokecenter" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/label_pokecenter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/poppins_regular"
-        android:text="Recover"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@id/img_pokecenter"
-        app:layout_constraintStart_toStartOf="@id/img_pokecenter"
-        app:layout_constraintTop_toBottomOf="@id/img_pokecenter" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

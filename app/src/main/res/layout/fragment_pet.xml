@@ -67,35 +67,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Pomeg x10" />
+            android:text="Pomeg x0" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_berry_kelpsy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Kelpsy x10" />
+            android:text="Kelpsy x0" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_berry_qualot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Qualot x10" />
+            android:text="Qualot x0" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_berry_hondew"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Hondew x10" />
+            android:text="Hondew x0" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_berry_grepa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Grepa x10" />
+            android:text="Grepa x0" />
 
 
     </com.google.android.flexbox.FlexboxLayout>
@@ -118,35 +118,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Master X10" />
+            android:text="Master x0" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_ball_ultra"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Ultra x10" />
+            android:text="Ultra x0" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_ball_great"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Great x10" />
+            android:text="Great x0" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_ball_luxury"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Luxury x10" />
+            android:text="Luxury x0" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_ball_poke"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:text="Poke x10" />
+            android:text="Poke x0" />
 
 
     </com.google.android.flexbox.FlexboxLayout>

@@ -5,6 +5,8 @@ sealed class Pokeballs(
     val successRate: Int,
     val sprite: String,
 ) {
+    var qty = 1
+
     object MasterBall : Pokeballs(
         name = "Master-Ball",
         successRate = 80,

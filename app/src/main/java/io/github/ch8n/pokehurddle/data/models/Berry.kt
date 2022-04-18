@@ -3,11 +3,15 @@ package io.github.ch8n.pokehurddle.data.models
 sealed class Berries(
     val name: String,
     val sprite: String,
-    val attractionRate: Int
+    val attractionRate: Int,
 ) {
 
     fun generateRandomBerries() {
         val amount = (1..10).random()
+        _qty = amount
+    }
+
+    fun setQty(amount: Int) {
         _qty = amount
     }
 

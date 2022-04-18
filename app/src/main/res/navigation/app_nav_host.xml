@@ -16,9 +16,6 @@
         <action
             android:id="@+id/action_homeFragment_to_pokemonFragment"
             app:destination="@id/pokemonFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_recoverFragment"
-            app:destination="@id/recoverFragment" />
     </fragment>
     <fragment
         android:id="@+id/exploreFragment"
@@ -36,10 +33,6 @@
         android:id="@+id/pokemonFragment"
         android:name="io.github.ch8n.pokehurddle.ui.pokemons.PokemonFragment"
         android:label="PokemonFragment" />
-    <fragment
-        android:id="@+id/recoverFragment"
-        android:name="io.github.ch8n.pokehurddle.ui.pokecenter.RecoverFragment"
-        android:label="RecoverFragment" />
     <fragment
         android:id="@+id/petFragment"
         android:name="io.github.ch8n.pokehurddle.ui.battle.PetFragment"

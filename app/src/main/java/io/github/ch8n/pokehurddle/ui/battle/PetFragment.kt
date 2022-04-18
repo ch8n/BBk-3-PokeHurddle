@@ -8,13 +8,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import io.github.ch8n.pokehurddle.data.models.Berries
+import io.github.ch8n.pokehurddle.data.models.Player
 import io.github.ch8n.pokehurddle.data.models.Pokeballs
 import io.github.ch8n.pokehurddle.databinding.FragmentPetBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
 import io.github.ch8n.setVisible
+import kotlinx.coroutines.flow.collect
 
 
 class PetFragment : Fragment() {
@@ -66,49 +69,52 @@ class PetFragment : Fragment() {
     }
 
     private inline fun FragmentPetBinding.setup() {
-        // TODO --> player invertory observing
-        // inventory based berry
-        // if sucess add to db
-        // else pokemon escape
 
         val pokemonInBattle = viewModel.pokemonEncounter ?: return
 
-        viewModel.player.observe(viewLifecycleOwner) {
-            val player = it ?: return@observe
 
-            player.berries.forEach { (berry, qty) ->
-                when (berry) {
-                    Berries.Empty -> {}
-                    Berries.GrepaBerry -> chipBerryGrepa.text = "${berry.name} x${qty}"
-                    Berries.HondewBerry -> chipBerryHondew.text = "${berry.name} x${qty}"
-                    Berries.KelpsyBerry -> chipBerryKelpsy.text = "${berry.name} x${qty}"
-                    Berries.PomegBerry -> chipBerryPomeg.text = "${berry.name} x${qty}"
-                    Berries.QualotBerry -> chipBerryQualot.text = "${berry.name} x${qty}"
+        lifecycleScope.launchWhenResumed {
+            viewModel.player.collect {
+                val player = it
+
+                if (player == Player.Empty) {
+                    return@collect
+                }
+
+                player.berries.forEach { (berry, qty) ->
+                    when (berry) {
+                        Berries.Empty -> {}
+                        Berries.GrepaBerry -> chipBerryGrepa.text = "${berry.name} x${qty}"
+                        Berries.HondewBerry -> chipBerryHondew.text = "${berry.name} x${qty}"
+                        Berries.KelpsyBerry -> chipBerryKelpsy.text = "${berry.name} x${qty}"
+                        Berries.PomegBerry -> chipBerryPomeg.text = "${berry.name} x${qty}"
+                        Berries.QualotBerry -> chipBerryQualot.text = "${berry.name} x${qty}"
+                    }
+                }
+
+                player.pokeballs.forEach { (ball, qty) ->
+                    when (ball) {
+                        Pokeballs.Empty -> {}
+                        Pokeballs.GreatBall -> chipBallGreat.text = "${ball.name} x${qty}"
+                        Pokeballs.LuxuryBall -> chipBallLuxury.text = "${ball.name} x${qty}"
+                        Pokeballs.MasterBall -> chipBallMaster.text = "${ball.name} x${qty}"
+                        Pokeballs.PokeBall -> chipBallPoke.text = "${ball.name} x${qty}"
+                        Pokeballs.UltraBall -> chipBallUltra.text = "${ball.name} x${qty}"
+                    }
+                }
+
+                val isBerriesEmpty = player.berries.values.all { it == 0 }
+                if (isBerriesEmpty) {
+                    countDownTimer?.onFinish()
+                    containerBerries.setVisible(false)
+                    containerPokeball.setVisible(true)
                 }
             }
-
-            player.pokeballs.forEach { (ball, qty) ->
-                when (ball) {
-                    Pokeballs.Empty -> {}
-                    Pokeballs.GreatBall -> chipBallGreat.text = "${ball.name} x${qty}"
-                    Pokeballs.LuxuryBall -> chipBallLuxury.text = "${ball.name} x${qty}"
-                    Pokeballs.MasterBall -> chipBallMaster.text = "${ball.name} x${qty}"
-                    Pokeballs.PokeBall -> chipBallPoke.text = "${ball.name} x${qty}"
-                    Pokeballs.UltraBall -> chipBallUltra.text = "${ball.name} x${qty}"
-                }
-            }
-
-            val isBerriesEmpty = player.berries.values.all { it == 0 }
-            if (isBerriesEmpty) {
-                containerBerries.setVisible(false)
-                containerPokeball.setVisible(true)
-            }
-
         }
+
 
         startPetTimer(
             onSessionOver = {
-                Toast.makeText(requireContext(), "Session over", Toast.LENGTH_SHORT).show()
                 containerBerries.setVisible(false)
                 containerPokeball.setVisible(true)
             }
@@ -125,12 +131,6 @@ class PetFragment : Fragment() {
             exitPetting(isPlayerExiting = true)
         }
 
-        chipBerryGrepa.setOnClickListener {
-            val grepa = Berries.GrepaBerry
-            val percent = pokemonInBattle.health / grepa.attractionRate
-            updateStatus(percent)
-        }
-
         val berriresChip = listOf(
             chipBerryPomeg to Berries.PomegBerry,
             chipBerryKelpsy to Berries.KelpsyBerry,
@@ -141,8 +141,16 @@ class PetFragment : Fragment() {
 
         berriresChip.forEach { (chip, berry) ->
             chip.setOnClickListener {
-                val percent = pokemonInBattle.health / berry.attractionRate
-                updateStatus(percent)
+                val playerStats = viewModel.player.value
+                val qty = playerStats.berries.get(berry) ?: 0
+                if (qty > 0) {
+                    val percent = pokemonInBattle.health / berry.attractionRate
+                    updateStatus(percent)
+                    berry.setQty(-1)
+                    viewModel.updatePlayer(berries = berry)
+                } else {
+                    "you don't have this berry".toast()
+                }
             }
         }
 
@@ -156,7 +164,16 @@ class PetFragment : Fragment() {
 
         ballsChips.forEach { (chip, ball) ->
             chip.setOnClickListener {
-                catchSuccess(ball)
+                val playerStats = viewModel.player.value
+                val qty = playerStats.pokeballs.get(ball) ?: 0
+                if (qty > 0) {
+                    ball.qty = -1
+                    viewModel.updatePlayer(pokeballs = ball)
+                    catchSuccess(ball)
+                } else {
+                    "you don't have this ball".toast()
+                }
+
             }
         }
 
@@ -173,22 +190,14 @@ class PetFragment : Fragment() {
     private fun FragmentPetBinding.catchSuccess(ball: Pokeballs) {
         val fillPercent = (progressLove.progress.toFloat() / progressLove.max.toFloat()) * 100
         val isCaptured = (100 - fillPercent) <= ball.successRate
-        val msg = if (isCaptured) {
-            "Gotcha!!"
-        } else {
-            "Pokemon Ran away!"
-        }
+        val msg = if (isCaptured) "Gotcha!!" else "Pokemon Ran away!"
         msg.toast()
         exitPetting(isPlayerExiting = false)
     }
 
     private fun updateStatus(percent: Int) = binding?.run {
         val likeness = randomLikeness(percent)
-        val likenessMessage = if (likeness > 0) {
-            "Great! loved it..."
-        } else {
-            "Yukk.. its sour.."
-        }
+        val likenessMessage = if (likeness > 0) "Great! loved it..." else "Yukk.. its sour.."
         ("$likenessMessage $likeness").toString().toast()
         progressLove.progress = progressLove.progress + likeness
     }

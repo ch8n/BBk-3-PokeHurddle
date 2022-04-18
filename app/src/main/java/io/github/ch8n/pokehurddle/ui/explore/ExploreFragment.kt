@@ -85,11 +85,8 @@ class ExploreFragment : Fragment() {
         }
 
         btnPet.setOnClickListener {
-            val pokemon = viewModel.pokemonEncounter ?: return@setOnClickListener
             findNavController().navigate(R.id.action_exploreFragment_to_petFragment)
-            viewModel.updatePlayer(pokemon = pokemon)
         }
-
 
         btnGenerate.setOnClickListener {
             viewModel.generateEncounter(
@@ -117,6 +114,7 @@ class ExploreFragment : Fragment() {
                 },
                 onPokeball = {
                     val pokeball = it
+                    pokeball.qty = 1
                     containerPokemon.setVisible(false)
                     Glide.with(requireContext())
                         .load(pokeball.sprite)

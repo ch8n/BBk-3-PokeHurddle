@@ -46,12 +46,6 @@ class HomeFragment : Fragment() {
                 navigate(R.id.action_homeFragment_to_pokemonFragment)
             }
         }
-
-        imgPokecenter.setOnClickListener {
-            with(findNavController()) {
-                navigate(R.id.action_homeFragment_to_recoverFragment)
-            }
-        }
     }
 
     override fun onDestroyView() {

@@ -1,13 +1,13 @@
 package io.github.ch8n.pokehurddle.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.ch8n.pokehurddle.data.models.*
 import io.github.ch8n.pokehurddle.data.repository.AppRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.max
@@ -19,8 +19,8 @@ class MainViewModel(
     private var _pokemonEncounter: PokemonDTO? = null
     val pokemonEncounter: PokemonDTO? get() = _pokemonEncounter
 
-    private val _player = MutableLiveData(Player.Empty)
-    val player: LiveData<Player> = _player
+    private val _player = MutableStateFlow(Player.Empty)
+    val player = _player.asStateFlow()
 
     fun updatePlayer(
         berries: Berries = Berries.Empty,
@@ -29,7 +29,7 @@ class MainViewModel(
         money: Int = 0
     ) = viewModelScope.launch(Dispatchers.IO) {
 
-        val playerStats = _player.value ?: return@launch
+        val playerStats = _player.value
 
         // update berries
         val previousBerryQty = playerStats.berries.get(berries) ?: 0
@@ -45,7 +45,7 @@ class MainViewModel(
         val previousBallsQty = playerStats.pokeballs.get(pokeballs) ?: 0
         val updatedBalls = if (pokeballs !is Pokeballs.Empty) {
             playerStats.pokeballs.toMutableMap().apply {
-                put(pokeballs, previousBallsQty + 1)
+                put(pokeballs, previousBallsQty + pokeballs.qty)
             }
         } else {
             playerStats.pokeballs
@@ -71,7 +71,7 @@ class MainViewModel(
             money = updateMoney
         )
 
-        _player.postValue(updatedStats)
+        _player.emit(updatedStats)
     }
 
     fun generateEncounter(
@@ -119,13 +119,17 @@ class MainViewModel(
         onLostBerry: (berry: Berries, amount: Int) -> Unit,
         onLostPokeball: (pokeball: Pokeballs) -> Unit,
         onEscapeNoLoss: () -> Unit,
-    ) {
-        val player = _player.value ?: return
+    ) = viewModelScope.launch {
+        val player = _player.value
+        if (player == Player.Empty) {
+            return@launch
+        }
+
         val lostAmount = (1..5).random()
         when ((0..2).random()) {
             0 -> {
                 if (player.money == 0) {
-                    return onEscapeNoLoss.invoke()
+                    return@launch onEscapeNoLoss.invoke()
                 }
                 var amount = player.money - lostAmount
                 if (amount < 0) amount = 0
@@ -134,24 +138,24 @@ class MainViewModel(
             }
             1 -> {
                 val randomPlayerBerry = player.berries.toList().randomOrNull()
-                    ?: return onEscapeNoLoss.invoke()
+                    ?: return@launch onEscapeNoLoss.invoke()
                 val updatedBerryQty = max(randomPlayerBerry.second - lostAmount, 0)
                 val updatedPlayerBerries = player.berries.toMutableMap().apply {
                     put(randomPlayerBerry.first, updatedBerryQty)
                 }
                 val updatedPlayer = player.copy(berries = updatedPlayerBerries)
-                _player.postValue(updatedPlayer)
+                _player.emit(updatedPlayer)
                 onLostBerry(randomPlayerBerry.first, lostAmount)
             }
             2 -> {
                 val randomPlayerPokeball = player.pokeballs.toList().randomOrNull()
-                    ?: return onEscapeNoLoss.invoke()
+                    ?: return@launch onEscapeNoLoss.invoke()
                 val updatedQty = max(randomPlayerPokeball.second - 1, 0)
                 val updatedPlayerPokeballs = player.pokeballs.toMutableMap().apply {
                     put(randomPlayerPokeball.first, updatedQty)
                 }
                 val updatedPlayer = player.copy(pokeballs = updatedPlayerPokeballs)
-                _player.postValue(updatedPlayer)
+                _player.emit(updatedPlayer)
                 onLostPokeball(randomPlayerPokeball.first)
             }
         }
