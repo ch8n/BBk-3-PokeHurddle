@@ -17,8 +17,8 @@ class AppRepository {
             return when (randomIndex) {
                 in 0..10 -> Pokeballs.MasterBall
                 in 10..25 -> Pokeballs.UltraBall
-                in 25..55 -> Pokeballs.GreatBall
-                in 55..75 -> Pokeballs.LuxuryBall
+                in 25..45 -> Pokeballs.GreatBall
+                in 45..55 -> Pokeballs.LuxuryBall
                 else -> Pokeballs.PokeBall
             }
         }
@@ -52,10 +52,10 @@ class AppRepository {
         get() {
             val randomIndex = (0..100).random()
             return when (randomIndex) {
-                in 0..10 -> Berries.GrepaBerry
-                in 10..25 -> Berries.HondewBerry
-                in 25..55 -> Berries.QualotBerry
-                in 55..75 -> Berries.KelpsyBerry
+                in 0..5 -> Berries.GrepaBerry
+                in 5..15 -> Berries.HondewBerry
+                in 15..30 -> Berries.QualotBerry
+                in 30..55 -> Berries.KelpsyBerry
                 else -> Berries.PomegBerry
             }
         }
@@ -64,12 +64,11 @@ class AppRepository {
         get() {
             val random = (0..100).random()
             return when (random) {
-                in 0..20 -> Encounter.Pokemon
-                in 20..30 -> Encounter.PokeBall
-                in 30..50 -> Encounter.Berry
-                in 50..60 -> Encounter.Money
+                in 0..10 -> Encounter.Pokemon
+                in 10..20 -> Encounter.PokeBall
+                in 20..30 -> Encounter.Berry
+                in 30..50 -> Encounter.Money
                 else -> Encounter.Nothing
             }
         }
-
 }

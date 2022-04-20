@@ -11,6 +11,11 @@ import io.github.ch8n.pokehurddle.ui.MainActivity
 
 class PokemonMart : Fragment() {
 
+    // TODO features
+    // central pokemon of the day! ==> health is cost
+    // row 1 --> berries => muilples of 20
+    // row 2 --> pokeball --> muliples of 40
+
     private var binding: FragmentMartBinding? = null
     private val viewModel by lazy {
         (requireActivity() as MainActivity).sharedViewModel
