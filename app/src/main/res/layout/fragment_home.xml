@@ -8,23 +8,23 @@
         android:id="@+id/img_explore"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginBottom="250dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
         app:srcCompat="@drawable/explore" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/label_explore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/poppins_regular"
         android:text="Explore"
         android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/img_explore"
+        app:layout_constraintStart_toStartOf="@id/img_explore"
         app:layout_constraintTop_toBottomOf="@id/img_explore" />
 
 
@@ -32,12 +32,37 @@
         android:id="@+id/img_bag"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/img_pokemon"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
         app:srcCompat="@drawable/backpack" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_pokemon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/img_shop"
+        app:layout_constraintStart_toEndOf="@+id/img_bag"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/pokemons" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_shop"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/img_pokemon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:srcCompat="@drawable/pokemart" />
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/label_bag"
@@ -51,17 +76,6 @@
         app:layout_constraintStart_toStartOf="@id/img_bag"
         app:layout_constraintTop_toBottomOf="@id/img_bag" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_pokemon"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="80dp"
-        app:srcCompat="@drawable/pokemons" />
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/label_pokemon"
         android:layout_width="wrap_content"
@@ -73,6 +87,19 @@
         app:layout_constraintEnd_toEndOf="@id/img_pokemon"
         app:layout_constraintStart_toStartOf="@id/img_pokemon"
         app:layout_constraintTop_toBottomOf="@id/img_pokemon" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/label_shop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppins_regular"
+        android:text="PokeMart"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@id/img_shop"
+        app:layout_constraintStart_toStartOf="@id/img_shop"
+        app:layout_constraintTop_toBottomOf="@id/img_shop" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

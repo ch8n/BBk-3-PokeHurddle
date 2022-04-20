@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_pokemonFragment"
             app:destination="@id/pokemonFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_pokemonMart"
+            app:destination="@id/pokemonMart" />
     </fragment>
     <fragment
         android:id="@+id/exploreFragment"
@@ -37,4 +40,8 @@
         android:id="@+id/petFragment"
         android:name="io.github.ch8n.pokehurddle.ui.battle.PetFragment"
         android:label="PetFragment" />
+    <fragment
+        android:id="@+id/pokemonMart"
+        android:name="io.github.ch8n.pokehurddle.ui.shop.PokemonMart"
+        android:label="PokemonMart" />
 </navigation>
