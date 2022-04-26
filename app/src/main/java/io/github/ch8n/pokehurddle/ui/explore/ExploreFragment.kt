@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -15,6 +16,13 @@ import io.github.ch8n.setVisible
 
 
 class ExploreFragment : Fragment() {
+
+    private var toast: Toast? = null
+    fun String.toast() {
+        toast?.cancel()
+        toast = Toast.makeText(requireContext(), this, Toast.LENGTH_SHORT)
+        toast?.show()
+    }
 
     private var binding: FragmentExploreBinding? = null
     private val viewModel by lazy {
@@ -85,7 +93,17 @@ class ExploreFragment : Fragment() {
         }
 
         btnPet.setOnClickListener {
-            findNavController().navigate(R.id.action_exploreFragment_to_petFragment)
+            val playerStats = viewModel.player.value
+            val isPokeballPresent = playerStats.pokeballs.values.sum() > 0
+            val isBerriePresent = playerStats.berries.values.sum() > 0
+            if (isPokeballPresent && isBerriePresent) {
+                findNavController().navigate(R.id.action_exploreFragment_to_petFragment)
+            } else {
+                when {
+                    !isPokeballPresent -> "you don't have any Pokeball".toast()
+                    !isBerriePresent -> "you don't have any berries".toast()
+                }
+            }
         }
 
         btnGenerate.setOnClickListener {
