@@ -45,6 +45,7 @@ class MartPokeballFragment : Fragment() {
         val pokeballAdapter = MartListAdapter(type = MartItemType.POKE_BALL, onPokeballClicked = {
             val playerCoins = viewModel.player.value.money
             if (playerCoins >= it.successRate) {
+                "You purchased ${it.name} x1!".toast()
                 viewModel.updatePlayer(pokeballs = it, money = -(it.successRate))
             } else {
                 "You don't have enough Poke-Coins!".toast()

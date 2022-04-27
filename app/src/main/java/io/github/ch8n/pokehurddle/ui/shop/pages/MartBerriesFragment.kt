@@ -46,6 +46,7 @@ class MartBerriesFragment : Fragment() {
             val playerCoins = viewModel.player.value.money
             if (playerCoins >= it.attractionRate) {
                 "You purchased ${it.name} x1!".toast()
+                it.setQty(1)
                 viewModel.updatePlayer(berries = it, money = -(it.attractionRate))
             } else {
                 "You don't have enough Poke-Coins!".toast()

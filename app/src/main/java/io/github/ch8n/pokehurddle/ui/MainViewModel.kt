@@ -172,15 +172,16 @@ class MainViewModel(
         _pokemonEncounter = null
     }
 
-    private var _martPokemon: PokemonDTO? = null
-    val martPokemon get() = _martPokemon
+    private val _martPokemon = MutableStateFlow<PokemonDTO?>(null)
+    val martPokemon = _martPokemon.asStateFlow()
 
     init {
         getMartPokemon()
     }
 
     fun getMartPokemon() = viewModelScope.launch {
-        _martPokemon = withContext(Dispatchers.IO) { repository.randomPokemon }
+        val pokemonDTO = withContext(Dispatchers.IO) { repository.randomPokemon }
+        _martPokemon.emit(pokemonDTO)
     }
 
 }

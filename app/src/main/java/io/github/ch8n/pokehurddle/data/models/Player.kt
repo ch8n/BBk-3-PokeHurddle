@@ -11,7 +11,7 @@ data class Player(
             berries = emptyMap(),
             pokeballs = emptyMap(),
             pokemon = emptyList(),
-            money = 0
+            money = 10000
         )
     }
 }
