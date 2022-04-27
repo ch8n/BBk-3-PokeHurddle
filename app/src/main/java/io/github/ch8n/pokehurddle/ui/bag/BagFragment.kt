@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import io.github.ch8n.pokehurddle.databinding.FragmentBagBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
+import io.github.ch8n.pokehurddle.ui.bag.adapters.BagPagerAdapter
 
 
 class BagFragment : Fragment() {

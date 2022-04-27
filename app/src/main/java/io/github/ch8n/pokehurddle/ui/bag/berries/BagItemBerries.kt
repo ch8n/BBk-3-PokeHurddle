@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import io.github.ch8n.pokehurddle.databinding.FragmentBagItemListingBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
-import io.github.ch8n.pokehurddle.ui.bag.BagListItemAdapter
-import io.github.ch8n.pokehurddle.ui.bag.BagListType
+import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListItemAdapter
+import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListType
 import kotlinx.coroutines.flow.collect
 
 class BagItemBerriesFragment : Fragment() {

@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.ui.bag
+package io.github.ch8n.pokehurddle.ui.bag.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
