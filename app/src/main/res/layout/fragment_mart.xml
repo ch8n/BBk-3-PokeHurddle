@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/red1">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_mart"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,10 +23,38 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_regular"
         android:scrollbars="vertical"
-        android:text="Mart..."
+        android:text="Poke-Mart"
+        android:textColor="@color/white"
         android:textSize="28sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_mart" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/label_wallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppins_regular"
+        android:scrollbars="vertical"
+        android:text="Wallet : (0) Coins"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_mart" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/grid_mart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_wallet"
+        tools:listitem="@layout/list_cell_mart_item" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

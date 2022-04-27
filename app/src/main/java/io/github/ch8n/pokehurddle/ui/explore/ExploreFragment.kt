@@ -72,6 +72,7 @@ class ExploreFragment : Fragment() {
         containerPokemon.setVisible(false)
         imgEncounter.setImageResource(R.drawable.escape)
         labelEncounter.setText(message)
+        btnExplore.setVisible(true)
     }
 
     private inline fun FragmentExploreBinding.setup() {
@@ -92,7 +93,6 @@ class ExploreFragment : Fragment() {
                     onEscape("You escaped!...")
                 }
             )
-            btnExplore.setVisible(true)
         }
 
         btnPet.setOnClickListener {

@@ -120,9 +120,10 @@ class MainViewModel(
         onLostPokeball: (pokeball: Pokeballs) -> Unit,
         onEscapeNoLoss: () -> Unit,
     ) = viewModelScope.launch {
+
         val player = _player.value
         if (player == Player.Empty) {
-            return@launch
+            return@launch onEscapeNoLoss.invoke()
         }
 
         val lostAmount = (1..5).random()
