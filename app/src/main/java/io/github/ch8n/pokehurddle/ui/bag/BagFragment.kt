@@ -1,13 +1,12 @@
 package io.github.ch8n.pokehurddle.ui.bag
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.github.ch8n.pokehurddle.R
+import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayoutMediator
 import io.github.ch8n.pokehurddle.databinding.FragmentBagBinding
-import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
 
 
@@ -33,14 +32,12 @@ class BagFragment : Fragment() {
     }
 
     private inline fun FragmentBagBinding.setup() {
-        labelItem.setText(
-            """
-            berries :\n ${viewModel.player.value?.berries}
-            -----
-            -----
-            pokeballs:\n ${viewModel.player.value?.pokeballs}
-        """.trimIndent()
-        )
+        val adapter = BagPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
+        pagerItems.adapter = adapter
+
+        TabLayoutMediator(tabs, pagerItems) { tab, position ->
+            tab.text = adapter.tabTitle.get(position)
+        }.attach()
     }
 
     override fun onDestroyView() {

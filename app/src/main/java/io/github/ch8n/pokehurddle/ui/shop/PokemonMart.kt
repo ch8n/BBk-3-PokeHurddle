@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import io.github.ch8n.pokehurddle.databinding.FragmentMartBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class PokemonMart : Fragment() {
+
+
 
     // TODO features
     // central pokemon of the day! ==> health is cost

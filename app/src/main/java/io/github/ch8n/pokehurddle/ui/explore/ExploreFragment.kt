@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import io.github.ch8n.pokehurddle.R
@@ -13,9 +14,13 @@ import io.github.ch8n.pokehurddle.data.models.PokemonDTO
 import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
 import io.github.ch8n.setVisible
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.onEach
 
 
 class ExploreFragment : Fragment() {
+
 
     private var toast: Toast? = null
     fun String.toast() {
