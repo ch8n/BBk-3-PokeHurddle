@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="450dp">
+    android:layout_height="match_parent"
+    android:background="@color/green1">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_exploreing"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/img_pokemon"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,10 +23,23 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_regular"
         android:scrollbars="vertical"
-        android:text="Pokemon..."
+        android:text="My Pokemon"
         android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_exploreing" />
+        app:layout_constraintTop_toBottomOf="@id/img_pokemon" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/grid_pokemon"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_pokemon"
+        tools:listitem="@layout/list_cell_pokemon" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

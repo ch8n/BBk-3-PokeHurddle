@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import io.github.ch8n.pokehurddle.databinding.FragmentPokemonBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
+import kotlinx.coroutines.flow.collect
 
 
 class PokemonFragment : Fragment() {
@@ -31,11 +34,14 @@ class PokemonFragment : Fragment() {
     }
 
     private inline fun FragmentPokemonBinding.setup() {
-        labelPokemon.setText(
-            """
-            pokemon :\n ${viewModel.player?.value?.pokemon?.joinToString(separator = "\n")}
-        """.trimIndent()
-        )
+        val gridAdapter = PokemonGridAdapter.newInstance()
+        gridPokemon.layoutManager = GridLayoutManager(requireContext(), 2)
+        gridPokemon.adapter = gridAdapter
+        lifecycleScope.launchWhenResumed {
+            viewModel.player.collect {
+                gridAdapter.submitList(it.pokemon)
+            }
+        }
     }
 
     override fun onDestroyView() {

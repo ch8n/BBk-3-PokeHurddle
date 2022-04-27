@@ -14,6 +14,7 @@
         <entry key="app/src/main/res/layout/fragment_pet.xml" value="0.28559213339033773" />
         <entry key="app/src/main/res/layout/fragment_pokemon.xml" value="0.2810265039966344" />
         <entry key="app/src/main/res/layout/list_cell_bag_item.xml" value="0.28559213339033773" />
+        <entry key="app/src/main/res/layout/list_cell_pokemon.xml" value="0.28559213339033773" />
       </map>
     </option>
   </component>
