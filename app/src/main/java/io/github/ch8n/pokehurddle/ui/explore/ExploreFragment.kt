@@ -76,6 +76,9 @@ class ExploreFragment : Fragment() {
     }
 
     private inline fun FragmentExploreBinding.setup() {
+        // TODO fix pricing in mart
+        // fix explore UI
+        // fix petting UI
 
         btnEscape.setOnClickListener {
             viewModel.onEscapePokemon(
@@ -154,6 +157,7 @@ class ExploreFragment : Fragment() {
                 },
                 onLoading = { isLoading ->
                     loader.setVisible(isLoading)
+                    btnExplore.isEnabled = !isLoading
                 }
             )
         }
