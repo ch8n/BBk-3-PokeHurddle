@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import io.github.ch8n.pokehurddle.databinding.FragmentBagItemListingBinding
+import io.github.ch8n.pokehurddle.databinding.FragmentItemListingBinding
 import io.github.ch8n.pokehurddle.ui.MainActivity
 import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListItemAdapter
 import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListType
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.collect
 
 class BagItemPokeballFragment : Fragment() {
 
-    private var binding: FragmentBagItemListingBinding? = null
+    private var binding: FragmentItemListingBinding? = null
     private val viewModel by lazy {
         (requireActivity() as MainActivity).sharedViewModel
     }
@@ -24,7 +24,7 @@ class BagItemPokeballFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentBagItemListingBinding.inflate(inflater, container, false)
+        binding = FragmentItemListingBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
@@ -33,9 +33,9 @@ class BagItemPokeballFragment : Fragment() {
         binding?.run { setup() }
     }
 
-    private inline fun FragmentBagItemListingBinding.setup() {
+    private inline fun FragmentItemListingBinding.setup() {
         val adapter = BagListItemAdapter(BagListType.POKE_BALL)
-        listBagItems.adapter = adapter
+        list.adapter = adapter
         lifecycleScope.launchWhenResumed {
             viewModel.player.collect {
                 adapter.setPlayerStats(it)

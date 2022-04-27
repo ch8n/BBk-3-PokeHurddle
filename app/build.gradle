@@ -72,8 +72,5 @@ dependencies {
 
     def flex_box_version = "3.0.0"
     implementation "com.google.android.flexbox:flexbox:$flex_box_version"
-    
-    implementation "androidx.recyclerview:recyclerview:1.2.1"
-
 
 }

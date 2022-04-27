@@ -172,4 +172,15 @@ class MainViewModel(
         _pokemonEncounter = null
     }
 
+    private var _martPokemon: PokemonDTO? = null
+    val martPokemon get() = _martPokemon
+
+    init {
+        getMartPokemon()
+    }
+
+    fun getMartPokemon() = viewModelScope.launch {
+        _martPokemon = withContext(Dispatchers.IO) { repository.randomPokemon }
+    }
+
 }

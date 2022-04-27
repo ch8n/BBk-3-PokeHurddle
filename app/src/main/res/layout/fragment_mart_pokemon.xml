@@ -2,71 +2,49 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="400dp"
     android:background="@color/red1">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_mart"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="48dp"
+        android:id="@+id/img_pokemon"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/pokemart" />
+        app:layout_constraintVertical_bias="0.2"
+        app:srcCompat="@drawable/pokeball" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/label_mart"
+        android:id="@+id/label_pokemon_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_regular"
         android:scrollbars="vertical"
-        android:text="Poke-Mart"
+        android:text="Pokemon Of the Day"
         android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_mart" />
+        app:layout_constraintTop_toBottomOf="@id/img_pokemon" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/label_wallet"
+        android:id="@+id/label_pokemon_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/poppins_regular"
         android:scrollbars="vertical"
-        android:text="Wallet : (0) Coins"
+        android:text="(0) P'Coins"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_mart" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@color/red2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/label_wallet"
-        app:tabIconTint="@color/white"
-        app:tabIndicatorColor="@color/white"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/white" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pager_items"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabs" />
+        app:layout_constraintTop_toBottomOf="@id/label_pokemon_name" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
