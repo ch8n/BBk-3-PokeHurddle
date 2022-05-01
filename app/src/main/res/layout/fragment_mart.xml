@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:background="@color/red1">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/explore_bg" />
+
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_mart"

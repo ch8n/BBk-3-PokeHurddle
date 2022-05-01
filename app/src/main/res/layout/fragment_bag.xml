@@ -6,6 +6,17 @@
     android:background="@color/blue1">
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/explore_bg" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_exploreing"
         android:layout_width="120dp"
         android:layout_height="120dp"
