@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.R
 import io.github.ch8n.pokehurddle.databinding.FragmentHomeBinding
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var binding: FragmentHomeBinding? = null
@@ -25,10 +26,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.run { setup() }
+        setup()
     }
 
-    private inline fun FragmentHomeBinding.setup() {
+    private fun setup() = with(requireNotNull(binding)) {
+
         imgExplore.setOnClickListener {
             with(findNavController()) {
                 navigate(R.id.action_homeFragment_to_exploreFragment)

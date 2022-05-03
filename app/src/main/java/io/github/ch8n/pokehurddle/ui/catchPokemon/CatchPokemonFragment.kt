@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.ui.battle
+package io.github.ch8n.pokehurddle.ui.catchPokemon
 
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -8,26 +8,26 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.data.models.Berries
 import io.github.ch8n.pokehurddle.data.models.Player
-import io.github.ch8n.pokehurddle.data.models.Pokeballs
+import io.github.ch8n.pokehurddle.data.models.Pokeball
 import io.github.ch8n.pokehurddle.databinding.FragmentPetBinding
-import io.github.ch8n.pokehurddle.ui.MainActivity
+import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.setVisible
 import kotlinx.coroutines.flow.collect
 
 
-class PetFragment : Fragment() {
+@AndroidEntryPoint
+class CatchPokemonFragment : Fragment() {
     private var binding: FragmentPetBinding? = null
 
     private var countDownTimer: CountDownTimer? = null
-
-    private val viewModel by lazy {
-        (requireActivity() as MainActivity).sharedViewModel
-    }
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +40,7 @@ class PetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.run { setup() }
+        setup()
     }
 
 
@@ -68,15 +68,13 @@ class PetFragment : Fragment() {
         countDownTimer?.start()
     }
 
-    private inline fun FragmentPetBinding.setup() {
+    private fun setup() = with(requireNotNull(binding)) {
 
-        val pokemonInBattle = viewModel.pokemonEncounter ?: return
-
+        val pokemonInBattle = viewModel.pokemonEncountered.value ?: return
 
         lifecycleScope.launchWhenResumed {
-            viewModel.player.collect {
+            viewModel.playerStats.collect {
                 val player = it
-
                 if (player == Player.Empty) {
                     return@collect
                 }
@@ -92,14 +90,14 @@ class PetFragment : Fragment() {
                     }
                 }
 
-                player.pokeballs.forEach { (ball, qty) ->
+                player.pokeball.forEach { (ball, qty) ->
                     when (ball) {
-                        Pokeballs.Empty -> {}
-                        Pokeballs.GreatBall -> chipBallGreat.text = "${ball.name} x${qty}"
-                        Pokeballs.LuxuryBall -> chipBallLuxury.text = "${ball.name} x${qty}"
-                        Pokeballs.MasterBall -> chipBallMaster.text = "${ball.name} x${qty}"
-                        Pokeballs.PokeBall -> chipBallPoke.text = "${ball.name} x${qty}"
-                        Pokeballs.UltraBall -> chipBallUltra.text = "${ball.name} x${qty}"
+                        Pokeball.Empty -> {}
+                        Pokeball.GreatBall -> chipBallGreat.text = "${ball.name} x${qty}"
+                        Pokeball.LuxuryBall -> chipBallLuxury.text = "${ball.name} x${qty}"
+                        Pokeball.MasterBall -> chipBallMaster.text = "${ball.name} x${qty}"
+                        Pokeball.PokeBall -> chipBallPoke.text = "${ball.name} x${qty}"
+                        Pokeball.UltraBall -> chipBallUltra.text = "${ball.name} x${qty}"
                     }
                 }
 
@@ -128,7 +126,7 @@ class PetFragment : Fragment() {
         progressLove.max = pokemonInBattle.health
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            exitPetting(isPlayerExiting = true)
+            findNavController().popBackStack()
         }
 
         val berriresChip = listOf(
@@ -141,58 +139,48 @@ class PetFragment : Fragment() {
 
         berriresChip.forEach { (chip, berry) ->
             chip.setOnClickListener {
-                val playerStats = viewModel.player.value
-                val qty = playerStats.berries.get(berry) ?: 0
-                if (qty > 0) {
-                    val percent = pokemonInBattle.health / berry.attractionRate
-                    updateStatus(percent)
-                    berry.setQty(-1)
-                    viewModel.updatePlayer(berries = berry)
-                } else {
-                    "you don't have this berry".toast()
-                }
+                viewModel.throwBerry(
+                    berry = berry,
+                    onSuccess = {
+                        updateStatus(it)
+                    },
+                    onFailed = {
+                        "You don't have enough berries".toast()
+                    }
+                )
             }
         }
 
         val ballsChips = listOf(
-            chipBallPoke to Pokeballs.PokeBall,
-            chipBallLuxury to Pokeballs.LuxuryBall,
-            chipBallGreat to Pokeballs.GreatBall,
-            chipBallUltra to Pokeballs.UltraBall,
-            chipBallMaster to Pokeballs.MasterBall,
+            chipBallPoke to Pokeball.PokeBall,
+            chipBallLuxury to Pokeball.LuxuryBall,
+            chipBallGreat to Pokeball.GreatBall,
+            chipBallUltra to Pokeball.UltraBall,
+            chipBallMaster to Pokeball.MasterBall,
         )
 
         ballsChips.forEach { (chip, ball) ->
             chip.setOnClickListener {
-                val playerStats = viewModel.player.value
-                val qty = playerStats.pokeballs.get(ball) ?: 0
-                if (qty > 0) {
-                    ball.qty = -1
-                    viewModel.updatePlayer(pokeballs = ball)
-                    catchSuccess(ball)
-                } else {
-                    "you don't have this ball".toast()
-                }
-
+                viewModel.throwBall(
+                    ball = ball,
+                    onSuccess = {
+                        catchSuccess(ball)
+                    },
+                    onFailed = {
+                        "you don't have this ball".toast()
+                    }
+                )
             }
         }
 
     }
 
-    private fun exitPetting(isPlayerExiting: Boolean) {
-        viewModel.setEscapedFromBattleOrPet(isPlayerExiting)
-        if (!isPlayerExiting) {
-            viewModel.resetEncounterPokemon()
-        }
-        findNavController().popBackStack()
-    }
-
-    private fun FragmentPetBinding.catchSuccess(ball: Pokeballs) {
+    private fun FragmentPetBinding.catchSuccess(ball: Pokeball) {
         val fillPercent = (progressLove.progress.toFloat() / progressLove.max.toFloat()) * 100
         val isCaptured = (100 - fillPercent) <= ball.successRate
         val msg = if (isCaptured) "Gotcha!!" else "Pokemon Ran away!"
         msg.toast()
-        exitPetting(isPlayerExiting = false)
+        findNavController().popBackStack()
     }
 
     private fun updateStatus(percent: Int) = binding?.run {

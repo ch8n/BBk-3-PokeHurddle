@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.github.ch8n.pokehurddle.data.models.Berries
-import io.github.ch8n.pokehurddle.data.models.Pokeballs
+import io.github.ch8n.pokehurddle.data.models.Pokeball
 import io.github.ch8n.pokehurddle.databinding.ListCellMartItemBinding
 
 enum class MartItemType {
@@ -14,7 +14,7 @@ enum class MartItemType {
 
 class MartListAdapter(
     private val type: MartItemType,
-    private val onPokeballClicked: (ball: Pokeballs) -> Unit = {},
+    private val onPokeballClicked: (ball: Pokeball) -> Unit = {},
     private val onBerryClicked: (berry: Berries) -> Unit = {}
 ) : RecyclerView.Adapter<MartItemVH>() {
 
@@ -26,12 +26,12 @@ class MartListAdapter(
         Berries.GrepaBerry
     )
 
-    private val pokeballs = listOf<Pokeballs>(
-        Pokeballs.MasterBall,
-        Pokeballs.UltraBall,
-        Pokeballs.GreatBall,
-        Pokeballs.LuxuryBall,
-        Pokeballs.PokeBall
+    private val pokeballs = listOf<Pokeball>(
+        Pokeball.MasterBall,
+        Pokeball.UltraBall,
+        Pokeball.GreatBall,
+        Pokeball.LuxuryBall,
+        Pokeball.PokeBall
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MartItemVH {
@@ -53,14 +53,14 @@ class MartListAdapter(
 
 class MartItemVH(
     private val binding: ListCellMartItemBinding,
-    private val onPokeballClicked: (ball: Pokeballs) -> Unit = {},
+    private val onPokeballClicked: (ball: Pokeball) -> Unit = {},
     private val onBerryClicked: (berry: Berries) -> Unit = {}
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun onBind(
         type: MartItemType,
         position: Int,
-        pokeballs: List<Pokeballs>,
+        pokeballs: List<Pokeball>,
         berries: List<Berries>
     ) = with(binding) {
         when (type) {

@@ -1,74 +1,39 @@
 package io.github.ch8n.pokehurddle.data.repository
 
-import android.util.Log
-import com.google.gson.Gson
-import io.github.ch8n.pokehurddle.data.models.Berries
-import io.github.ch8n.pokehurddle.data.models.Encounter
-import io.github.ch8n.pokehurddle.data.models.Pokeballs
+import io.github.ch8n.pokehurddle.data.local.sources.PlayerDAO
+import io.github.ch8n.pokehurddle.data.local.sources.PokemonDAO
+import io.github.ch8n.pokehurddle.data.models.Player
 import io.github.ch8n.pokehurddle.data.models.PokemonDTO
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import io.github.ch8n.pokehurddle.data.remote.PokemonService
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AppRepository {
+@Singleton
+class AppRepository @Inject constructor(
+    private val pokemonService: PokemonService,
+    private val pokemonDAO: PokemonDAO,
+    private val playerDAO: PlayerDAO,
+    private val ioDispatcher: CoroutineDispatcher
+) {
+    suspend fun fetchPokemon(id: Int) = withContext(ioDispatcher) {
+        pokemonService.fetchPokemon(id)
+    }
 
-    val randomPokeBall: Pokeballs
-        get() {
-            val randomIndex = (0..100).random()
-            return when (randomIndex) {
-                in 0..10 -> Pokeballs.MasterBall
-                in 10..25 -> Pokeballs.UltraBall
-                in 25..45 -> Pokeballs.GreatBall
-                in 45..55 -> Pokeballs.LuxuryBall
-                else -> Pokeballs.PokeBall
-            }
-        }
+    suspend fun getPokemon(id: Int) = withContext(ioDispatcher) {
+        pokemonDAO.getPokemon(id)
+    }
 
-    private val pokemonCache = mutableMapOf<Int, PokemonDTO>()
-    val randomPokemon: PokemonDTO?
-        get() {
-            val client = OkHttpClient()
-            val randomPokemonIndex = (0..1126).random()
-            return pokemonCache.getOrElse(randomPokemonIndex) {
-                val pokemonRequest = Request.Builder()
-                    .url("https://pokeapi.co/api/v2/pokemon/$randomPokemonIndex")
-                    .build()
-                val response = kotlin.runCatching {
-                    val data = client.newCall(pokemonRequest).execute()
-                    val jsonString = data.body?.string()
-                    Gson().fromJson(jsonString, PokemonDTO::class.java)
-                }
-                val pokemonDTO = response.getOrElse {
-                    Log.e("Error", "Pokemon fetch failed", it)
-                    null
-                }
-                pokemonDTO?.let {
-                    pokemonCache.put(randomPokemonIndex, it)
-                }
-                pokemonDTO
-            }
-        }
+    suspend fun savePokemon(pokemonDTO: PokemonDTO) = withContext(ioDispatcher) {
+        pokemonDAO.savePokemon(pokemonDTO)
+    }
 
-    val randomBerry: Berries
-        get() {
-            val randomIndex = (0..100).random()
-            return when (randomIndex) {
-                in 0..5 -> Berries.GrepaBerry
-                in 5..15 -> Berries.HondewBerry
-                in 15..30 -> Berries.QualotBerry
-                in 30..55 -> Berries.KelpsyBerry
-                else -> Berries.PomegBerry
-            }
-        }
+    fun getPlayer() = playerDAO.getPlayer().flowOn(ioDispatcher)
 
-    val randomEncounter: Encounter
-        get() {
-            val random = (0..100).random()
-            return when (random) {
-                in 0..10 -> Encounter.Pokemon
-                in 10..20 -> Encounter.PokeBall
-                in 20..30 -> Encounter.Berry
-                in 30..50 -> Encounter.Money
-                else -> Encounter.Nothing
-            }
-        }
+    suspend fun savePlayer(player: Player) = withContext(ioDispatcher) {
+        playerDAO.savePlayer(player)
+    }
+
 }

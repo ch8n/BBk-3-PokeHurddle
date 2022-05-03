@@ -38,7 +38,7 @@
         android:label="PokemonFragment" />
     <fragment
         android:id="@+id/petFragment"
-        android:name="io.github.ch8n.pokehurddle.ui.battle.PetFragment"
+        android:name="io.github.ch8n.pokehurddle.ui.catchPokemon.CatchPokemonFragment"
         android:label="PetFragment" />
     <fragment
         android:id="@+id/pokemonMart"

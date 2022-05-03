@@ -5,18 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.databinding.FragmentBagBinding
-import io.github.ch8n.pokehurddle.ui.MainActivity
+import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.bag.adapters.BagPagerAdapter
 
 
+@AndroidEntryPoint
 class BagFragment : Fragment() {
 
     private var binding: FragmentBagBinding? = null
-    private val viewModel by lazy {
-        (requireActivity() as MainActivity).sharedViewModel
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,10 +29,10 @@ class BagFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.run { setup() }
+        setup()
     }
 
-    private inline fun FragmentBagBinding.setup() {
+    private fun setup() = with(requireNotNull(binding)) {
         val adapter = BagPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
         pagerItems.adapter = adapter
 

@@ -1,7 +1,11 @@
 package io.github.ch8n.pokehurddle.data.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class PokemonDTO(
-    val id: Int,
+    @PrimaryKey val id: Int,
     val name: String,
     val sprites: Sprites,
     val stats: List<Stat>,

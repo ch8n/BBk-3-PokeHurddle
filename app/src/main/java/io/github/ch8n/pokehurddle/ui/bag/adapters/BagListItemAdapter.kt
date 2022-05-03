@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.github.ch8n.pokehurddle.data.models.Berries
 import io.github.ch8n.pokehurddle.data.models.Player
-import io.github.ch8n.pokehurddle.data.models.Pokeballs
+import io.github.ch8n.pokehurddle.data.models.Pokeball
 import io.github.ch8n.pokehurddle.databinding.ListCellBagItemBinding
 
 enum class BagListType {
@@ -27,12 +27,12 @@ class BagListItemAdapter(
         Berries.GrepaBerry
     )
 
-    private val pokeballs = listOf<Pokeballs>(
-        Pokeballs.MasterBall,
-        Pokeballs.UltraBall,
-        Pokeballs.GreatBall,
-        Pokeballs.LuxuryBall,
-        Pokeballs.PokeBall
+    private val pokeballs = listOf<Pokeball>(
+        Pokeball.MasterBall,
+        Pokeball.UltraBall,
+        Pokeball.GreatBall,
+        Pokeball.LuxuryBall,
+        Pokeball.PokeBall
     )
 
     fun setPlayerStats(playerStats: Player) {
@@ -65,7 +65,7 @@ class BagItemVH(private val binding: ListCellBagItemBinding) :
         type: BagListType,
         playerStats: Player,
         position: Int,
-        pokeballs: List<Pokeballs>,
+        pokeballs: List<Pokeball>,
         berries: List<Berries>
     ) = with(binding) {
         when (type) {
@@ -80,7 +80,7 @@ class BagItemVH(private val binding: ListCellBagItemBinding) :
             }
             BagListType.POKE_BALL -> {
                 val pokeball = pokeballs.get(position)
-                val playerQty = playerStats.pokeballs.get(pokeball) ?: 0
+                val playerQty = playerStats.pokeball.get(pokeball) ?: 0
                 Glide.with(root.context)
                     .load(pokeball.sprite)
                     .into(imgItem)

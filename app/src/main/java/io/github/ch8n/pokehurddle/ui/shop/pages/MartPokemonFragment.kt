@@ -6,13 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.R
 import io.github.ch8n.pokehurddle.databinding.FragmentMartPokemonBinding
-import io.github.ch8n.pokehurddle.ui.MainActivity
+import io.github.ch8n.pokehurddle.ui.MainViewModel
 import kotlinx.coroutines.flow.collect
 
+@AndroidEntryPoint
 class MartPokemonFragment : Fragment() {
 
     private var toast: Toast? = null
@@ -23,9 +26,7 @@ class MartPokemonFragment : Fragment() {
     }
 
     private var binding: FragmentMartPokemonBinding? = null
-    private val viewModel by lazy {
-        (requireActivity() as MainActivity).sharedViewModel
-    }
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,23 +39,25 @@ class MartPokemonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.run { setup() }
+        setup()
     }
 
-    private inline fun FragmentMartPokemonBinding.setup() {
+    private fun setup() = with(requireNotNull(binding)) {
 
         lifecycleScope.launchWhenResumed {
             viewModel.martPokemon.collect {
-                val pokemon = it
-                if (pokemon == null) {
+                val pokemon = it ?: kotlin.run {
+
                     Glide.with(requireContext())
                         .load(R.drawable.pokeball)
                         .into(imgPokemon)
+
                     labelPokemonName.setText("Out of Service!")
                     labelPokemonPrice.setText("No Pokemon today...")
                     imgPokemon.setOnClickListener {
                         viewModel.getMartPokemon()
                     }
+
                     return@collect
                 }
 
@@ -62,18 +65,14 @@ class MartPokemonFragment : Fragment() {
                     .load(pokemon.sprites.front_default)
                     .into(imgPokemon)
 
-                labelPokemonName.setText(pokemon.name)
-                labelPokemonPrice.setText("(${pokemon.health}) P`Coins")
+                labelPokemonName.text = pokemon.name
+                labelPokemonPrice.text = "(${pokemon.health}) P`Coins"
 
                 imgPokemon.setOnClickListener {
-                    val playerCoins = viewModel.player.value.money
-                    if (playerCoins >= pokemon.health) {
-                        "You purchased ${pokemon.name}!".toast()
-                        viewModel.updatePlayer(pokemon = pokemon, money = -(pokemon.health))
-                        viewModel.getMartPokemon()
-                    } else {
-                        "You don't have enough Poke-Coins!".toast()
-                    }
+                    viewModel.purchasePokemon(
+                        onSuccess = { "You purchased ${pokemon.name}!".toast() },
+                        onFailed = { "You don't have enough Poke-Coins!".toast() }
+                    )
                 }
             }
         }
