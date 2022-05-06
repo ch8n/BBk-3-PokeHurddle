@@ -75,6 +75,7 @@ class CatchPokemonFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             viewModel.playerStats.collect {
                 val player = it
+
                 if (player == Player.Empty) {
                     return@collect
                 }

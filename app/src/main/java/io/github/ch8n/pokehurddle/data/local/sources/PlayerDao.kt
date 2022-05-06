@@ -13,6 +13,6 @@ interface PlayerDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun savePlayer(player: Player)
 
-    @Query("SELECT * FROM Player LIMIT 1")
-    fun getPlayer(): Flow<Player>
+    @Query("SELECT * FROM Player")
+    fun getPlayer(): Flow<List<Player>>
 }

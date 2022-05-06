@@ -6,7 +6,9 @@ import io.github.ch8n.pokehurddle.data.models.Player
 import io.github.ch8n.pokehurddle.data.models.PokemonDTO
 import io.github.ch8n.pokehurddle.data.remote.PokemonService
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,7 +32,9 @@ class AppRepository @Inject constructor(
         pokemonDAO.savePokemon(pokemonDTO)
     }
 
-    fun getPlayer() = playerDAO.getPlayer().flowOn(ioDispatcher)
+    fun getPlayer(): Flow<Player> = playerDAO.getPlayer().map {
+        it.firstOrNull() ?: Player.Empty
+    }.flowOn(ioDispatcher)
 
     suspend fun savePlayer(player: Player) = withContext(ioDispatcher) {
         playerDAO.savePlayer(player)
