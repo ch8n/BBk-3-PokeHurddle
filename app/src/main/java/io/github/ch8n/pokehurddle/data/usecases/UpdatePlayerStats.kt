@@ -25,7 +25,7 @@ class UpdatePlayerBerries @Inject constructor(
             val updatedBerries = berries.toMutableMap().apply {
                 put(berry, qty)
             }
-            val updatedPlayer = copy(berries = updatedBerries)
+            val updatedPlayer = copy(berries = HashMap(updatedBerries))
             appRepository.savePlayer(updatedPlayer)
         }
     }
@@ -40,7 +40,7 @@ class UpdatePlayerPokeballs @Inject constructor(
             val updatedPokeBalls = this.pokeball.toMutableMap().apply {
                 put(pokeball, qty)
             }
-            val updatedPlayer = currentPlayerStats.copy(pokeball = updatedPokeBalls)
+            val updatedPlayer = currentPlayerStats.copy(pokeball = HashMap(updatedPokeBalls))
             appRepository.savePlayer(updatedPlayer)
         }
     }

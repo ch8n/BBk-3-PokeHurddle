@@ -9,16 +9,16 @@ import com.google.gson.reflect.TypeToken
 @Entity
 data class Player(
     @PrimaryKey val id: String,
-    val berries: Map<Berries, Int>,
-    val pokeball: Map<Pokeball, Int>,
+    val berries: HashMap<Berries, Int>,
+    val pokeball: HashMap<Pokeball, Int>,
     val pokemon: List<PokemonDTO>,
     val money: Int
 ) {
     companion object {
         val Empty = Player(
             id = "",
-            berries = emptyMap(),
-            pokeball = emptyMap(),
+            berries = hashMapOf(),
+            pokeball = hashMapOf(),
             pokemon = emptyList(),
             money = 0
         )

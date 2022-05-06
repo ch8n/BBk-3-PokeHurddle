@@ -13,14 +13,14 @@ class BerriesMapConverter {
     companion object {
         @TypeConverter
         @JvmStatic
-        fun fromString(value: String): Map<Berries, Int> {
-            val valueType = object : TypeToken<Map<Berries, Int>>() {}.type
-            return Gson().fromJson(value, valueType)
+        fun fromString(value: String): HashMap<Berries, Int> {
+            val map = Gson().fromJson(value, Any::class.java)
+            return HashMap(map as Map<Berries, Int>)
         }
 
         @TypeConverter
         @JvmStatic
-        fun fromStringMap(value: Map<Berries, Int>): String {
+        fun fromStringMap(value: HashMap<Berries, Int>): String {
             val gson = Gson()
             return gson.toJson(value)
         }
@@ -33,14 +33,15 @@ class PokeballMapConverter {
     companion object {
         @TypeConverter
         @JvmStatic
-        fun fromString(value: String): Map<Pokeball, Int> {
-            val valueType = object : TypeToken<Map<Pokeball, Int>>() {}.type
-            return Gson().fromJson(value, valueType)
+        fun fromString(value: String): HashMap<Pokeball, Int> {
+            println(value)
+            val map = Gson().fromJson(value, Any::class.java)
+            return HashMap(map as Map<Pokeball, Int>)
         }
 
         @TypeConverter
         @JvmStatic
-        fun fromStringMap(value: Map<Pokeball, Int>): String {
+        fun fromStringMap(value: HashMap<Pokeball, Int>): String {
             val gson = Gson()
             return gson.toJson(value)
         }

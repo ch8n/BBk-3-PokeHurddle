@@ -31,7 +31,6 @@ class GetRandomBerry @Inject constructor() {
             in 30..55 -> Berries.KelpsyBerry
             else -> Berries.PomegBerry
         }
-        delay(500)
         emit(berry)
     }
 }
@@ -48,6 +47,7 @@ class GetRandomMoney @Inject constructor() {
 @Singleton
 class GetRandomEncounter @Inject constructor() {
     operator fun invoke() = flow<Encounter> {
+        delay(1000)
         val random = (0..100).random()
         val encounter = when (random) {
             in 0..10 -> Encounter.Pokemon
@@ -71,7 +71,6 @@ class GetRandomPokeball @Inject constructor() {
             in 45..55 -> Pokeball.LuxuryBall
             else -> Pokeball.PokeBall
         }
-        delay(500)
         emit(pokeball)
     }
 }
