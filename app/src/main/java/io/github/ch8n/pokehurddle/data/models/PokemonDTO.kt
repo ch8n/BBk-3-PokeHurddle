@@ -30,7 +30,6 @@ data class Sprites(
     val front_default: String,
 )
 
-@Entity
 data class Stat(
     val base_stat: Int
 )
