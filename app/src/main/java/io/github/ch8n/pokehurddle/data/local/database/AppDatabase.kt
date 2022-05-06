@@ -4,13 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import io.github.ch8n.pokehurddle.data.local.sources.PlayerDAO
 import io.github.ch8n.pokehurddle.data.local.sources.PokemonDAO
-import io.github.ch8n.pokehurddle.data.models.Player
-import io.github.ch8n.pokehurddle.data.models.PokemonDTO
+import io.github.ch8n.pokehurddle.data.models.*
 
 
 @Database(entities = [Player::class, PokemonDTO::class], version = 1)
+@TypeConverters(
+    BerriesMapConverter::class,
+    PokeballMapConverter::class,
+    PokemonListConverter::class,
+    PokemonStatsListConverter::class,
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun playerDAO(): PlayerDAO

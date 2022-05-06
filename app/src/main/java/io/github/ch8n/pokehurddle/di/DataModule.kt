@@ -38,8 +38,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun providePokemonService(okHttpClient: OkHttpClient) =
-        PokemonService(okHttpClient, Dispatchers.IO)
+    fun providePokemonService(okHttpClient: OkHttpClient) = PokemonService(okHttpClient)
 
     @Singleton
     @Provides
@@ -47,6 +46,6 @@ object DataModule {
         pokemonService: PokemonService,
         pokemonDAO: PokemonDAO,
         playerDAO: PlayerDAO
-    ) = AppRepository(pokemonService, pokemonDAO, playerDAO)
+    ) = AppRepository(pokemonService, pokemonDAO, playerDAO, Dispatchers.IO)
 
 }

@@ -1,5 +1,8 @@
 package io.github.ch8n.pokehurddle.data.models
 
+import androidx.room.Entity
+
+@Entity
 sealed class Pokeball(
     val name: String,
     val successRate: Int,
@@ -8,6 +11,7 @@ sealed class Pokeball(
     val qty: Int = 1
 ) {
 
+    @Entity
     object MasterBall : Pokeball(
         name = "Master-Ball",
         successRate = 80,
@@ -15,6 +19,7 @@ sealed class Pokeball(
         martCost = 80
     )
 
+    @Entity
     object UltraBall : Pokeball(
         name = "Ultra-ball",
         successRate = 60,
@@ -22,6 +27,7 @@ sealed class Pokeball(
         martCost = 60
     )
 
+    @Entity
     object GreatBall : Pokeball(
         name = "Great-ball",
         successRate = 40,
@@ -29,6 +35,7 @@ sealed class Pokeball(
         martCost = 40
     )
 
+    @Entity
     object LuxuryBall : Pokeball(
         name = "Luxury-Ball",
         successRate = 30,
@@ -36,6 +43,7 @@ sealed class Pokeball(
         martCost = 30
     )
 
+    @Entity
     object PokeBall : Pokeball(
         name = "Poke-Ball",
         successRate = 20,
@@ -43,5 +51,6 @@ sealed class Pokeball(
         martCost = 20
     )
 
+    @Entity
     object Empty : Pokeball(name = "", sprite = "", successRate = 0, martCost = 0)
 }
