@@ -1,52 +1,32 @@
 package io.github.ch8n.pokehurddle.ui.catchPokemon
 
-import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.data.models.Berries.*
-import io.github.ch8n.pokehurddle.data.models.Encounter.*
 import io.github.ch8n.pokehurddle.data.models.Player
 import io.github.ch8n.pokehurddle.data.models.Pokeball
 import io.github.ch8n.pokehurddle.data.models.Pokeball.*
 import io.github.ch8n.pokehurddle.databinding.FragmentPetBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
+import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import io.github.ch8n.setVisible
 import kotlinx.coroutines.flow.collect
 
 
 @AndroidEntryPoint
-class CatchPokemonFragment : Fragment() {
-    private var binding: FragmentPetBinding? = null
+class CatchPokemonFragment : ViewBindingFragment<FragmentPetBinding>() {
 
     private var countDownTimer: CountDownTimer? = null
     private val viewModel: MainViewModel by activityViewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentPetBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setup()
-    }
-
-
-    private fun startPetTimer(onSessionOver: () -> Unit) = binding?.run {
+    private fun startPetTimer(onSessionOver: () -> Unit) = binding.run {
         val ticGap = 1000L /* 1 second in millis */
         val petTime = 15 * ticGap /* 15 second Game */
 
@@ -70,7 +50,7 @@ class CatchPokemonFragment : Fragment() {
         countDownTimer?.start()
     }
 
-    private fun setup() = with(requireNotNull(binding)) {
+    override fun setup() = with(binding) {
 
         val pokemonInBattle = viewModel.pokemonEncountered.value ?: return
 
@@ -148,7 +128,7 @@ class CatchPokemonFragment : Fragment() {
                         updateStatus(it)
                     },
                     onFailed = {
-                        "You don't have enough berries".toast()
+                        "You don't have enough berries".snack()
                     }
                 )
             }
@@ -170,7 +150,7 @@ class CatchPokemonFragment : Fragment() {
                         catchSuccess(ball)
                     },
                     onFailed = {
-                        "you don't have this ball".toast()
+                        "you don't have this ball".snack()
                     }
                 )
             }
@@ -182,14 +162,14 @@ class CatchPokemonFragment : Fragment() {
         val fillPercent = (progressLove.progress.toFloat() / progressLove.max.toFloat()) * 100
         val isCaptured = (100 - fillPercent) <= ball.successRate
         val msg = if (isCaptured) "Gotcha!!" else "Pokemon Ran away!"
-        msg.toast()
+        msg.snack()
         findNavController().popBackStack()
     }
 
-    private fun updateStatus(percent: Int) = binding?.run {
+    private fun updateStatus(percent: Int) = binding.run {
         val likeness = randomLikeness(percent)
         val likenessMessage = if (likeness > 0) "Great! loved it..." else "Yukk.. its sour.."
-        ("$likenessMessage $likeness").toString().toast()
+        ("$likenessMessage $likeness").toString().snack()
         progressLove.progress = progressLove.progress + likeness
     }
 
@@ -200,16 +180,11 @@ class CatchPokemonFragment : Fragment() {
         }
     }
 
-    private var toast: Toast? = null
-    fun String.toast() {
-        toast?.cancel()
-        toast = Toast.makeText(requireContext(), this, Toast.LENGTH_SHORT)
-        toast?.show()
+    override fun onDestroyView() {
+        countDownTimer?.cancel()
+        super.onDestroyView()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        countDownTimer?.cancel()
-        binding = null
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPetBinding
+        get() = FragmentPetBinding::inflate
 }

@@ -4,32 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.R
 import io.github.ch8n.pokehurddle.databinding.FragmentHomeBinding
+import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
 
-    private var binding: FragmentHomeBinding? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentHomeBinding =
+        FragmentHomeBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setup()
     }
 
-    private fun setup() = with(requireNotNull(binding)) {
+    override fun setup() = with(binding) {
 
         imgExplore.setOnClickListener {
             with(findNavController()) {
@@ -55,10 +47,5 @@ class HomeFragment : Fragment() {
             }
         }
 
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
     }
 }

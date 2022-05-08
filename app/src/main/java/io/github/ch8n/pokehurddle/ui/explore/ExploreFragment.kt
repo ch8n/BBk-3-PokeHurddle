@@ -1,11 +1,7 @@
 package io.github.ch8n.pokehurddle.ui.explore
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,36 +11,15 @@ import io.github.ch8n.pokehurddle.R
 import io.github.ch8n.pokehurddle.data.models.PokemonDTO
 import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
+import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import io.github.ch8n.setVisible
 import kotlinx.coroutines.flow.firstOrNull
 
 
 @AndroidEntryPoint
-class ExploreFragment : Fragment() {
+class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
 
-    private var toast: Toast? = null
-    fun String.toast() {
-        toast?.cancel()
-        toast = Toast.makeText(requireContext(), this, Toast.LENGTH_SHORT)
-        toast?.show()
-    }
-
-    private var binding: FragmentExploreBinding? = null
     private val viewModel: MainViewModel by activityViewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentExploreBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setup()
-    }
 
     private fun FragmentExploreBinding.displayPokemon(pokemon: PokemonDTO) {
         containerPokemon.setVisible(true)
@@ -57,14 +32,14 @@ class ExploreFragment : Fragment() {
         labelEncounter.text = pokemon.name.capitalize()
     }
 
-    fun onEscape(message: String) = binding?.run {
+    fun onEscape(message: String) = binding.run {
         containerPokemon.setVisible(false)
         imgEncounter.setImageResource(R.drawable.escape)
         labelEncounter.text = message
         btnExplore.setVisible(true)
     }
 
-    private fun setup() = with(requireNotNull(binding)) {
+    override fun setup() = with(binding) {
 
         btnEscape.setOnClickListener {
             viewModel.onPlayerEscaped(
@@ -93,8 +68,8 @@ class ExploreFragment : Fragment() {
                     findNavController().navigate(R.id.action_exploreFragment_to_petFragment)
                 } else {
                     when {
-                        !isPokeballPresent -> "you don't have any Pokeball".toast()
-                        !isBerriePresent -> "you don't have any berries".toast()
+                        !isPokeballPresent -> "you don't have any Pokeball".snack()
+                        !isBerriePresent -> "you don't have any berries".snack()
                     }
                 }
             }
@@ -142,8 +117,6 @@ class ExploreFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentExploreBinding
+        get() = FragmentExploreBinding::inflate
 }

@@ -1,38 +1,18 @@
 package io.github.ch8n.pokehurddle.ui.bag
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.databinding.FragmentBagBinding
-import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.bag.adapters.BagPagerAdapter
+import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 
 
 @AndroidEntryPoint
-class BagFragment : Fragment() {
+class BagFragment : ViewBindingFragment<FragmentBagBinding>() {
 
-    private var binding: FragmentBagBinding? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentBagBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setup()
-    }
-
-    private fun setup() = with(requireNotNull(binding)) {
+    override fun setup() = with(binding) {
         val adapter = BagPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
         pagerItems.adapter = adapter
 
@@ -41,8 +21,7 @@ class BagFragment : Fragment() {
         }.attach()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentBagBinding
+        get() = FragmentBagBinding::inflate
+
 }

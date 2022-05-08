@@ -1,11 +1,7 @@
 package io.github.ch8n.pokehurddle.ui.shop.pages
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,45 +9,24 @@ import io.github.ch8n.pokehurddle.databinding.FragmentItemListingBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.shop.adapters.MartItemType
 import io.github.ch8n.pokehurddle.ui.shop.adapters.MartListAdapter
+import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 
 @AndroidEntryPoint
-class MartBerriesFragment : Fragment() {
+class MartBerriesFragment : ViewBindingFragment<FragmentItemListingBinding>() {
 
-    private var toast: Toast? = null
-    fun String.toast() {
-        toast?.cancel()
-        toast = Toast.makeText(requireContext(), this, Toast.LENGTH_SHORT)
-        toast?.show()
-    }
-
-    private var binding: FragmentItemListingBinding? = null
     private val viewModel: MainViewModel by activityViewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentItemListingBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setup(requireNotNull(binding))
-    }
-
-    private fun setup(binding: FragmentItemListingBinding) = with(binding) {
+    override fun setup() = with(binding) {
         val berriesAdapter = MartListAdapter(
             type = MartItemType.POKE_BERRY,
             onBerryClicked = {
                 viewModel.purchaseBerry(
                     berry = it,
                     onFailed = {
-                        "You don't have enough Poke-Coins!".toast()
+                        "You don't have enough Poke-Coins!".snack()
                     },
                     onSuccess = {
-                        "You purchased ${it.name} x1!".toast()
+                        "You purchased ${it.name} x1!".snack()
                     }
                 )
             })
@@ -60,8 +35,6 @@ class MartBerriesFragment : Fragment() {
         list.adapter = berriesAdapter
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentItemListingBinding
+        get() = FragmentItemListingBinding::inflate
 }
