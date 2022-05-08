@@ -13,9 +13,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.ch8n.pokehurddle.data.models.Berries
+import io.github.ch8n.pokehurddle.data.models.Berries.*
+import io.github.ch8n.pokehurddle.data.models.Encounter.*
 import io.github.ch8n.pokehurddle.data.models.Player
 import io.github.ch8n.pokehurddle.data.models.Pokeball
+import io.github.ch8n.pokehurddle.data.models.Pokeball.*
 import io.github.ch8n.pokehurddle.databinding.FragmentPetBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.setVisible
@@ -82,23 +84,23 @@ class CatchPokemonFragment : Fragment() {
 
                 player.berries.forEach { (berry, qty) ->
                     when (berry) {
-                        Berries.Empty -> {}
-                        Berries.GrepaBerry -> chipBerryGrepa.text = "${berry.name} x${qty}"
-                        Berries.HondewBerry -> chipBerryHondew.text = "${berry.name} x${qty}"
-                        Berries.KelpsyBerry -> chipBerryKelpsy.text = "${berry.name} x${qty}"
-                        Berries.PomegBerry -> chipBerryPomeg.text = "${berry.name} x${qty}"
-                        Berries.QualotBerry -> chipBerryQualot.text = "${berry.name} x${qty}"
+                        EmptyBerry -> {}
+                        GrepaBerry -> chipBerryGrepa.text = "${berry.name} x${qty}"
+                        HondewBerry -> chipBerryHondew.text = "${berry.name} x${qty}"
+                        KelpsyBerry -> chipBerryKelpsy.text = "${berry.name} x${qty}"
+                        PomegBerry -> chipBerryPomeg.text = "${berry.name} x${qty}"
+                        QualotBerry -> chipBerryQualot.text = "${berry.name} x${qty}"
                     }
                 }
 
                 player.pokeball.forEach { (ball, qty) ->
                     when (ball) {
-                        Pokeball.Empty -> {}
-                        Pokeball.GreatBall -> chipBallGreat.text = "${ball.name} x${qty}"
-                        Pokeball.LuxuryBall -> chipBallLuxury.text = "${ball.name} x${qty}"
-                        Pokeball.MasterBall -> chipBallMaster.text = "${ball.name} x${qty}"
-                        Pokeball.PokeBall -> chipBallPoke.text = "${ball.name} x${qty}"
-                        Pokeball.UltraBall -> chipBallUltra.text = "${ball.name} x${qty}"
+                        EmptyBall -> {}
+                        GreatBall -> chipBallGreat.text = "${ball.name} x${qty}"
+                        LuxuryBall -> chipBallLuxury.text = "${ball.name} x${qty}"
+                        MasterBall -> chipBallMaster.text = "${ball.name} x${qty}"
+                        NormalBall -> chipBallPoke.text = "${ball.name} x${qty}"
+                        UltraBall -> chipBallUltra.text = "${ball.name} x${qty}"
                     }
                 }
 
@@ -131,11 +133,11 @@ class CatchPokemonFragment : Fragment() {
         }
 
         val berriresChip = listOf(
-            chipBerryPomeg to Berries.PomegBerry,
-            chipBerryKelpsy to Berries.KelpsyBerry,
-            chipBerryQualot to Berries.QualotBerry,
-            chipBerryHondew to Berries.HondewBerry,
-            chipBerryGrepa to Berries.GrepaBerry,
+            chipBerryPomeg to PomegBerry,
+            chipBerryKelpsy to KelpsyBerry,
+            chipBerryQualot to QualotBerry,
+            chipBerryHondew to HondewBerry,
+            chipBerryGrepa to GrepaBerry,
         )
 
         berriresChip.forEach { (chip, berry) ->
@@ -153,11 +155,11 @@ class CatchPokemonFragment : Fragment() {
         }
 
         val ballsChips = listOf(
-            chipBallPoke to Pokeball.PokeBall,
-            chipBallLuxury to Pokeball.LuxuryBall,
-            chipBallGreat to Pokeball.GreatBall,
-            chipBallUltra to Pokeball.UltraBall,
-            chipBallMaster to Pokeball.MasterBall,
+            chipBallPoke to NormalBall,
+            chipBallLuxury to LuxuryBall,
+            chipBallGreat to GreatBall,
+            chipBallUltra to UltraBall,
+            chipBallMaster to MasterBall,
         )
 
         ballsChips.forEach { (chip, ball) ->

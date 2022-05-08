@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.github.ch8n.pokehurddle.data.models.Berries
+import io.github.ch8n.pokehurddle.data.models.Berries.*
 import io.github.ch8n.pokehurddle.data.models.Pokeball
+import io.github.ch8n.pokehurddle.data.models.Pokeball.*
 import io.github.ch8n.pokehurddle.databinding.ListCellMartItemBinding
 
 enum class MartItemType {
@@ -19,19 +21,19 @@ class MartListAdapter(
 ) : RecyclerView.Adapter<MartItemVH>() {
 
     private val berries = listOf<Berries>(
-        Berries.PomegBerry,
-        Berries.KelpsyBerry,
-        Berries.QualotBerry,
-        Berries.HondewBerry,
-        Berries.GrepaBerry
+        PomegBerry,
+        KelpsyBerry,
+        QualotBerry,
+        HondewBerry,
+        GrepaBerry
     )
 
     private val pokeballs = listOf<Pokeball>(
-        Pokeball.MasterBall,
-        Pokeball.UltraBall,
-        Pokeball.GreatBall,
-        Pokeball.LuxuryBall,
-        Pokeball.PokeBall
+        MasterBall,
+        UltraBall,
+        GreatBall,
+        LuxuryBall,
+        NormalBall
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MartItemVH {

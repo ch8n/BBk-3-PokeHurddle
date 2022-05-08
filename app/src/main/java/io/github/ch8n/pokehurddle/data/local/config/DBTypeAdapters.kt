@@ -7,20 +7,21 @@ import io.github.ch8n.pokehurddle.data.models.Berries
 import io.github.ch8n.pokehurddle.data.models.Pokeball
 import io.github.ch8n.pokehurddle.data.models.PokemonDTO
 import io.github.ch8n.pokehurddle.data.models.Stat
+import java.lang.reflect.Type
 
 class BerriesMapConverter {
 
     companion object {
         @TypeConverter
         @JvmStatic
-        fun fromString(value: String): HashMap<Berries, Int> {
-            val map = Gson().fromJson(value, Any::class.java)
-            return HashMap(map as Map<Berries, Int>)
+        fun fromString(value: String): Map<Berries, Int> {
+            val mapType: Type = object : TypeToken<Map<Berries, Int>>() {}.type
+            return Gson().fromJson(value, mapType)
         }
 
         @TypeConverter
         @JvmStatic
-        fun fromStringMap(value: HashMap<Berries, Int>): String {
+        fun fromStringMap(value: Map<Berries, Int>): String {
             val gson = Gson()
             return gson.toJson(value)
         }
@@ -33,15 +34,14 @@ class PokeballMapConverter {
     companion object {
         @TypeConverter
         @JvmStatic
-        fun fromString(value: String): HashMap<Pokeball, Int> {
-            println(value)
-            val map = Gson().fromJson(value, Any::class.java)
-            return HashMap(map as Map<Pokeball, Int>)
+        fun fromString(value: String): Map<Pokeball, Int> {
+            val mapType: Type = object : TypeToken<Map<Pokeball, Int>>() {}.type
+            return Gson().fromJson(value, mapType)
         }
 
         @TypeConverter
         @JvmStatic
-        fun fromStringMap(value: HashMap<Pokeball, Int>): String {
+        fun fromStringMap(value: Map<Pokeball, Int>): String {
             val gson = Gson()
             return gson.toJson(value)
         }

@@ -232,7 +232,6 @@ class MainViewModel @Inject constructor(
     fun throwBall(ball: Pokeball, onSuccess: () -> Unit, onFailed: () -> Unit) =
         viewModelScope.launch {
             val playerStats = playerStats.first()
-            val pokemon = pokemonEncountered.value ?: return@launch onFailed.invoke()
             val qty = playerStats.pokeball.get(ball) ?: 0
             if (qty > 0) {
                 onSuccess.invoke()
