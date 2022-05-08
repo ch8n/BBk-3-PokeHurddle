@@ -82,7 +82,7 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
                     Glide.with(requireContext())
                         .load(R.drawable.nothing)
                         .into(imgEncounter)
-                    labelEncounter.setText("Nothing happened!")
+                    labelEncounter.text = "Nothing happened!"
                 },
                 onBerry = { berry, qty ->
                     containerPokemon.setVisible(false)

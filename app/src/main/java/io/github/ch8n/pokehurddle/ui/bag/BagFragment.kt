@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.databinding.FragmentBagBinding
-import io.github.ch8n.pokehurddle.ui.bag.adapters.BagPagerAdapter
+import io.github.ch8n.pokehurddle.ui.bag.pages.BagItemBerriesFragment
+import io.github.ch8n.pokehurddle.ui.bag.pages.BagItemPokeballFragment
+import io.github.ch8n.pokehurddle.ui.utils.AppPagerAdapter
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 
 
@@ -13,11 +15,16 @@ import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 class BagFragment : ViewBindingFragment<FragmentBagBinding>() {
 
     override fun setup() = with(binding) {
-        val adapter = BagPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
+        val adapter = AppPagerAdapter.newInstance(
+            fragmentManager = requireActivity().supportFragmentManager,
+            lifecycle = lifecycle,
+            "PokeBalls" to BagItemPokeballFragment(),
+            "Berries" to BagItemBerriesFragment()
+        )
         pagerItems.adapter = adapter
 
         TabLayoutMediator(tabs, pagerItems) { tab, position ->
-            tab.text = adapter.tabTitle.get(position)
+            tab.text = adapter.getTitle(position)
         }.attach()
     }
 

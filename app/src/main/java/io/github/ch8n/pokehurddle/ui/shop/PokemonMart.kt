@@ -8,7 +8,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.databinding.FragmentMartBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
-import io.github.ch8n.pokehurddle.ui.shop.adapters.MartPagerAdapter
+import io.github.ch8n.pokehurddle.ui.shop.pages.MartBerriesFragment
+import io.github.ch8n.pokehurddle.ui.shop.pages.MartPokeballFragment
+import io.github.ch8n.pokehurddle.ui.shop.pages.MartPokemonFragment
+import io.github.ch8n.pokehurddle.ui.utils.AppPagerAdapter
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import kotlinx.coroutines.flow.collect
 
@@ -26,11 +29,18 @@ class PokemonMart : ViewBindingFragment<FragmentMartBinding>() {
             }
         }
 
-        val adapter = MartPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
+        val adapter = AppPagerAdapter.newInstance(
+            fragmentManager = requireActivity().supportFragmentManager,
+            lifecycle = lifecycle,
+            "Pokemon Of Day" to MartPokemonFragment(),
+            "Berries" to MartBerriesFragment(),
+            "PokeBalls" to MartPokeballFragment()
+        )
+
         pagerItems.adapter = adapter
 
         TabLayoutMediator(tabs, pagerItems) { tab, position ->
-            tab.text = adapter.tabTitle.get(position)
+            tab.text = adapter.getTitle(position)
         }.attach()
 
     }

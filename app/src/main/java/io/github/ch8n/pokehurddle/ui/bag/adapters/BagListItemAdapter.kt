@@ -16,12 +16,14 @@ enum class BagListType {
 }
 
 class BagListItemAdapter(
-    private val type: BagListType
+    private val type: BagListType,
+    private val onBerryClicked: (berry: Berries) -> Unit = {},
+    private val onBallClicked: (pokeball: Pokeball) -> Unit = {},
 ) : RecyclerView.Adapter<BagItemVH>() {
 
     private var playerStats: Player? = null
 
-    private val berries = listOf<Berries>(
+    private val berries = listOf(
         PomegBerry,
         KelpsyBerry,
         QualotBerry,
@@ -29,7 +31,7 @@ class BagListItemAdapter(
         GrepaBerry
     )
 
-    private val pokeballs = listOf<Pokeball>(
+    private val pokeballs = listOf(
         MasterBall,
         UltraBall,
         GreatBall,
@@ -43,14 +45,14 @@ class BagListItemAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BagItemVH {
-        val binding =
-            ListCellBagItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ListCellBagItemBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
         return BagItemVH(binding)
     }
 
     override fun onBindViewHolder(holder: BagItemVH, position: Int) {
         val stats = playerStats ?: return
-        holder.onBind(type, stats, position, pokeballs, berries)
+        holder.onBind(type, stats, position, pokeballs, berries, onBallClicked, onBerryClicked)
     }
 
     override fun getItemCount(): Int = when (type) {
@@ -68,26 +70,39 @@ class BagItemVH(private val binding: ListCellBagItemBinding) :
         playerStats: Player,
         position: Int,
         pokeballs: List<Pokeball>,
-        berries: List<Berries>
+        berries: List<Berries>,
+        onBallClicked: (pokeball: Pokeball) -> Unit,
+        onBerryClicked: (berry: Berries) -> Unit
     ) = with(binding) {
+
         when (type) {
             BagListType.POKE_BERRY -> {
                 val berry = berries.get(position)
                 val playerQty = playerStats.berries.get(berry) ?: 0
+
                 Glide.with(root.context)
                     .load(berry.sprite)
                     .into(imgItem)
-                labelItem.setText(berry.name)
-                labelQty.setText("x$playerQty")
+
+                labelItem.text = berry.name
+                labelQty.text = "x$playerQty"
+                binding.root.setOnClickListener {
+                    onBerryClicked.invoke(berry)
+                }
             }
             BagListType.POKE_BALL -> {
                 val pokeball = pokeballs.get(position)
                 val playerQty = playerStats.pokeball.get(pokeball) ?: 0
+
                 Glide.with(root.context)
                     .load(pokeball.sprite)
                     .into(imgItem)
-                labelItem.setText(pokeball.name)
-                labelQty.setText("x$playerQty")
+
+                labelItem.text = pokeball.name
+                labelQty.text = "x$playerQty"
+                binding.root.setOnClickListener {
+                    onBallClicked.invoke(pokeball)
+                }
             }
         }
     }

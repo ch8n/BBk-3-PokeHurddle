@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/layout/fragment_bag.xml" value="0.2810265039966344" />
         <entry key="app/src/main/res/layout/fragment_bag_item_listing.xml" value="0.28559213339033773" />
         <entry key="app/src/main/res/layout/fragment_battle.xml" value="0.2810265039966344" />
+        <entry key="app/src/main/res/layout/fragment_battle_items.xml" value="0.28559213339033773" />
         <entry key="app/src/main/res/layout/fragment_explore.xml" value="0.20136518771331058" />
         <entry key="app/src/main/res/layout/fragment_health.xml" value="0.2810265039966344" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.28559213339033773" />
@@ -16,6 +17,7 @@
         <entry key="app/src/main/res/layout/fragment_pet.xml" value="0.28559213339033773" />
         <entry key="app/src/main/res/layout/fragment_pokemon.xml" value="0.2810265039966344" />
         <entry key="app/src/main/res/layout/list_cell_bag_item.xml" value="0.28559213339033773" />
+        <entry key="app/src/main/res/layout/list_cell_battle_items.xml" value="0.28559213339033773" />
         <entry key="app/src/main/res/layout/list_cell_mart_item.xml" value="0.28559213339033773" />
         <entry key="app/src/main/res/layout/list_cell_pokemon.xml" value="0.28559213339033773" />
       </map>
