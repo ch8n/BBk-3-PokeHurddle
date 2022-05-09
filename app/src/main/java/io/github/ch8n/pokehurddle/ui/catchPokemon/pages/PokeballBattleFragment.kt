@@ -25,10 +25,13 @@ class PokeballBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>()
             onBallClicked = { pokeball ->
                 if (parentFragment is CatchPokemonFragment) {
                     val catchFragment = parentFragment as CatchPokemonFragment
+                    catchFragment.showSnack("You used ${pokeball.name}!")
                     viewModel.throwBall(
                         ball = pokeball,
-                        onSuccess = { catchFragment.catchSuccess(pokeball) },
-                        onFailed = { "You don't have this PokeBall".snack() }
+                        onSuccess = {
+                            catchFragment.catchSuccess(pokeball)
+                        },
+                        onFailed = { catchFragment.showSnack("You don't have this PokeBall") }
                     )
                 }
             }

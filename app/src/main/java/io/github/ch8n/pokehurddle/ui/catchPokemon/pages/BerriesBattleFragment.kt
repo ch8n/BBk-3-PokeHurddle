@@ -23,12 +23,16 @@ class BerriesBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>() 
         val adapter = BagListItemAdapter(
             type = BagListType.POKE_BERRY,
             onBerryClicked = { berry ->
-                if (parentFragment is CatchPokemonFragment) {
+                if (requireParentFragment() is CatchPokemonFragment) {
                     val catchFragment = parentFragment as CatchPokemonFragment
                     viewModel.throwBerry(
                         berry = berry,
-                        onSuccess = { catchFragment.updateStatus(it) },
-                        onFailed = { "You don't have enough berries".snack() }
+                        onSuccess = {
+                            catchFragment.updateStatus(it)
+                        },
+                        onFailed = {
+                            catchFragment.showSnack("You don't have enough berries")
+                        }
                     )
                 }
             }

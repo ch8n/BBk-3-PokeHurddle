@@ -33,10 +33,11 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/lable_pokemon_speak"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="16dp"
                 android:text="Bring it on Trainer!"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -46,7 +47,6 @@
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:indeterminateTint="@android:color/holo_red_dark"
                 android:scaleY="8"
                 app:layout_constraintEnd_toEndOf="parent"

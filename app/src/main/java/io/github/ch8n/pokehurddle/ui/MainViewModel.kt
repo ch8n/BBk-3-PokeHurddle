@@ -23,8 +23,11 @@ class MainViewModel @Inject constructor(
     private val _martPokemon = MutableStateFlow<PokemonDTO?>(null)
     val martPokemon = _martPokemon.asStateFlow()
 
+    private val _isBattleEscaped = MutableStateFlow<Boolean>(false)
+    val isBattleEscaped = _isBattleEscaped.asStateFlow()
+
     private val _pokemonEncountered = MutableStateFlow<PokemonDTO?>(null)
-    val pokemonEncountered = _martPokemon.asStateFlow()
+    val pokemonEncountered = _pokemonEncountered.asStateFlow()
 
     init {
         getMartPokemon()
@@ -241,5 +244,17 @@ class MainViewModel @Inject constructor(
                 onFailed.invoke()
             }
         }
+
+    fun setBattleEscaped(hasEscaped: Boolean) = viewModelScope.launch {
+        _isBattleEscaped.emit(hasEscaped)
+        if (!hasEscaped) {
+            _pokemonEncountered.emit(null)
+        }
+    }
+
+    fun captureEncounteredPokemon() = viewModelScope.launch {
+        val pokemonDTO = pokemonEncountered.value ?: return@launch
+        updatePlayerStats.updatePlayerPokemon(pokemonDTO)
+    }
 
 }

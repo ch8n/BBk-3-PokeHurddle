@@ -13,6 +13,7 @@ import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import io.github.ch8n.setVisible
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
 
 
@@ -32,31 +33,32 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
         labelEncounter.text = pokemon.name.capitalize()
     }
 
-    fun onEscape(message: String) = binding.run {
+    private fun onEscape(message: String) = binding.run {
         containerPokemon.setVisible(false)
         imgEncounter.setImageResource(R.drawable.escape)
         labelEncounter.text = message
+        loader.setVisible(false)
         btnExplore.setVisible(true)
     }
 
     override fun setup() = with(binding) {
 
-        btnEscape.setOnClickListener {
-            viewModel.onPlayerEscaped(
-                onLostBerry = { berry, amount ->
-                    onEscape("You dropped $amount ${berry.name} while escaping")
-                },
-                onLostMoney = {
-                    val qtyMsg = if (it > 0) it else "all"
-                    onEscape("You dropped $qtyMsg Coins while escaping")
-                },
-                onLostPokeball = {
-                    onEscape("You dropped ${it.name} while escaping")
-                },
-                onEscapeNoLoss = {
-                    onEscape("You escaped!...")
+        lifecycleScope.launchWhenResumed {
+            viewModel.isBattleEscaped.collectLatest { isBattleEscaped ->
+                if (isBattleEscaped) {
+                    val pokemon = viewModel.pokemonEncountered.value
+                    if (pokemon == null) {
+                        onEscape("You escaped!...")
+                        return@collectLatest
+                    }
+                    viewModel.setBattleEscaped(false)
+                    onEscapingPokemon()
                 }
-            )
+            }
+        }
+
+        btnEscape.setOnClickListener {
+            onEscapingPokemon()
         }
 
         btnPet.setOnClickListener {
@@ -68,8 +70,8 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
                     findNavController().navigate(R.id.action_exploreFragment_to_petFragment)
                 } else {
                     when {
-                        !isPokeballPresent -> "you don't have any Pokeball".snack()
-                        !isBerriePresent -> "you don't have any berries".snack()
+                        !isPokeballPresent -> "you don't have any Pokeball".snack(btnPet)
+                        !isBerriePresent -> "you don't have any berries".snack(btnPet)
                     }
                 }
             }
@@ -115,6 +117,28 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
                 }
             )
         }
+    }
+
+    private fun onEscapingPokemon() = with(binding) {
+        imgEncounter.setImageResource(R.drawable.escape)
+        labelEncounter.text = "Escaping..."
+        containerPokemon.setVisible(false)
+        loader.setVisible(true)
+        viewModel.onPlayerEscaped(
+            onLostBerry = { berry, amount ->
+                onEscape("You dropped $amount ${berry.name} while escaping")
+            },
+            onLostMoney = {
+                val qtyMsg = if (it > 0) it else "all"
+                onEscape("You dropped $qtyMsg Coins while escaping")
+            },
+            onLostPokeball = {
+                onEscape("You dropped ${it.name} while escaping")
+            },
+            onEscapeNoLoss = {
+                onEscape("You escaped!...")
+            }
+        )
     }
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentExploreBinding

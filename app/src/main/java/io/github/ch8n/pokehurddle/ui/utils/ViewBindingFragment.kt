@@ -40,10 +40,12 @@ abstract class ViewBindingFragment<VB : ViewBinding> : Fragment() {
     }
 
     private var snackbar: Snackbar? = null
-    fun String.snack(targetView: View) {
+    fun String.snack(targetView: View): Snackbar {
         snackbar?.dismiss()
-        snackbar = Snackbar.make(targetView, this, Snackbar.LENGTH_SHORT)
+        snackbar = Snackbar.make(binding.root, this, Snackbar.LENGTH_SHORT)
+        snackbar?.anchorView = targetView
         snackbar?.show()
+        return requireNotNull(snackbar)
     }
 
     fun String.snack() = snack(binding.root)
