@@ -1,5 +1,6 @@
 package io.github.ch8n.pokehurddle.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -7,6 +8,7 @@ import io.github.ch8n.pokehurddle.data.models.*
 import io.github.ch8n.pokehurddle.data.usecases.ObservablePlayerStats
 import io.github.ch8n.pokehurddle.data.usecases.RandomEvent
 import io.github.ch8n.pokehurddle.data.usecases.UpdatePlayerStats
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,6 +37,7 @@ class MainViewModel @Inject constructor(
 
     fun getMartPokemon() {
         randomEvent.getRandomPokemon()
+            .catch { e -> Log.e("Error", "failed pokemon", e) }
             .onEach { _martPokemon.emit(it) }
             .launchIn(viewModelScope)
     }
@@ -68,9 +71,10 @@ class MainViewModel @Inject constructor(
         playerStats: Player,
         onPokemon: (pokemon: PokemonDTO) -> Unit
     ) {
-        val randomPokemon = randomEvent.getRandomPokemon().first()
-        val playerPokemon = playerStats.pokemon.find { it.id == randomPokemon.id }
-        if (playerPokemon != null) {
+        val randomPokemon =
+            kotlin.runCatching { randomEvent.getRandomPokemon().first() }.getOrNull()
+        val playerPokemon = playerStats.pokemon.find { it.id == randomPokemon?.id }
+        if (playerPokemon != null || randomPokemon == null) {
             // player already has pokemon find new
             showPokemon(playerStats, onPokemon)
         } else {
@@ -234,6 +238,7 @@ class MainViewModel @Inject constructor(
 
     fun throwBall(ball: Pokeball, onSuccess: () -> Unit, onFailed: () -> Unit) =
         viewModelScope.launch {
+            delay(500)
             val playerStats = playerStats.first()
             val qty = playerStats.pokeball.get(ball) ?: 0
             if (qty > 0) {
