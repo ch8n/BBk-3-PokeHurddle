@@ -30,7 +30,7 @@ class PokemonMart : ViewBindingFragment<FragmentMartBinding>() {
         }
 
         val adapter = AppPagerAdapter.newInstance(
-            fragmentManager = requireActivity().supportFragmentManager,
+            fragmentManager = childFragmentManager,
             lifecycle = lifecycle,
             "Pokemon Of Day" to MartPokemonFragment(),
             "Berries" to MartBerriesFragment(),

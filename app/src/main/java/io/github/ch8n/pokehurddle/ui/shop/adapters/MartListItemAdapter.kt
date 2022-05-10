@@ -71,8 +71,8 @@ class MartItemVH(
                 Glide.with(root.context)
                     .load(berry.sprite)
                     .into(imgMartItem)
-                labelMartItem.setText(berry.name)
-                labelMartPrice.setText("${berry.attractionRate} Poke-coins")
+                labelMartItem.text = berry.name
+                labelMartPrice.text = "${berry.attractionRate} Poke-coins"
                 root.setOnClickListener {
                     onBerryClicked.invoke(berry)
                 }
@@ -82,8 +82,8 @@ class MartItemVH(
                 Glide.with(root.context)
                     .load(pokeball.sprite)
                     .into(imgMartItem)
-                labelMartItem.setText(pokeball.name)
-                labelMartPrice.setText("${pokeball.successRate} Poke-coins")
+                labelMartItem.text = pokeball.name
+                labelMartPrice.text = "${pokeball.successRate} Poke-coins"
                 root.setOnClickListener {
                     onPokeballClicked.invoke(pokeball)
                 }

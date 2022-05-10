@@ -12,9 +12,10 @@ import io.github.ch8n.pokehurddle.data.models.PokemonDTO
 import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
-import io.github.ch8n.setVisible
+import io.github.ch8n.pokehurddle.ui.utils.setVisible
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -30,7 +31,11 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
             .load(pokemon.sprites.front_default)
             .into(imgEncounter)
 
-        labelEncounter.text = pokemon.name.capitalize()
+        labelEncounter.text = pokemon.name.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
+        }
     }
 
     private fun onEscape(message: String) = binding.run {
@@ -91,7 +96,11 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
                     Glide.with(requireContext())
                         .load(berry.sprite)
                         .into(imgEncounter)
-                    labelEncounter.text = "You found ${berry.name.capitalize()} x ${qty}!"
+                    labelEncounter.text = "You found ${berry.name.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }} x ${qty}!"
                 },
                 onPokemon = {
                     val pokemon = it
@@ -102,7 +111,11 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
                     Glide.with(requireContext())
                         .load(pokeball.sprite)
                         .into(imgEncounter)
-                    labelEncounter.text = "You found ${pokeball.name.capitalize()} x1!"
+                    labelEncounter.text = "You found ${pokeball.name.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }} x1!"
                 },
                 onMoney = { coins ->
                     containerPokemon.setVisible(false)

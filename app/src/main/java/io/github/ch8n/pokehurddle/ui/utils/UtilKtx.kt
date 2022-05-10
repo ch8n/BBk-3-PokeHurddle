@@ -1,4 +1,4 @@
-package io.github.ch8n
+package io.github.ch8n.pokehurddle.ui.utils
 
 import android.view.View
 

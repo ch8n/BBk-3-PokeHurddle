@@ -27,8 +27,8 @@ class MartPokemonFragment : ViewBindingFragment<FragmentMartPokemonBinding>() {
                         .load(R.drawable.pokeball)
                         .into(imgPokemon)
 
-                    labelPokemonName.setText("Out of Service!")
-                    labelPokemonPrice.setText("No Pokemon today...")
+                    labelPokemonName.text = "Out of Service!"
+                    labelPokemonPrice.text = "No Pokemon today..."
                     imgPokemon.setOnClickListener {
                         viewModel.getMartPokemon()
                     }

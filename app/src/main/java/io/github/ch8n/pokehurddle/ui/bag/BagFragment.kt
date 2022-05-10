@@ -16,7 +16,7 @@ class BagFragment : ViewBindingFragment<FragmentBagBinding>() {
 
     override fun setup() = with(binding) {
         val adapter = AppPagerAdapter.newInstance(
-            fragmentManager = requireActivity().supportFragmentManager,
+            fragmentManager = childFragmentManager,
             lifecycle = lifecycle,
             "PokeBalls" to BagItemPokeballFragment(),
             "Berries" to BagItemBerriesFragment()

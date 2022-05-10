@@ -43,6 +43,6 @@ class PokemonVH(private val binding: ListCellPokemonBinding) :
         Glide.with(root.context)
             .load(pokemonDTO.sprites.front_default)
             .into(imgPokemon)
-        labelPokemon.setText(pokemonDTO.name)
+        labelPokemon.text = pokemonDTO.name
     }
 }
