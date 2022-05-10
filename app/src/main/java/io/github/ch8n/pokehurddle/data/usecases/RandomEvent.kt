@@ -38,7 +38,7 @@ class GetRandomBerry @Inject constructor() {
 @Singleton
 class GetRandomMoney @Inject constructor() {
     operator fun invoke(): Int {
-        val randomCoins = (10..20).random()
+        val randomCoins = (10..50).shuffled().first()
         return randomCoins
     }
 }
