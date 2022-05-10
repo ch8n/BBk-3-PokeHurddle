@@ -96,11 +96,9 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
                     Glide.with(requireContext())
                         .load(berry.sprite)
                         .into(imgEncounter)
-                    labelEncounter.text = "You found ${berry.name.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.getDefault()
-                        ) else it.toString()
-                    }} x ${qty}!"
+                    labelEncounter.text = "You found ${
+                        berry.name.capitalize()
+                    } x${qty}!"
                 },
                 onPokemon = {
                     val pokemon = it
@@ -111,11 +109,9 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
                     Glide.with(requireContext())
                         .load(pokeball.sprite)
                         .into(imgEncounter)
-                    labelEncounter.text = "You found ${pokeball.name.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.getDefault()
-                        ) else it.toString()
-                    }} x1!"
+                    labelEncounter.text = "You found ${
+                        pokeball.name.capitalize()
+                    } x1!"
                 },
                 onMoney = { coins ->
                     containerPokemon.setVisible(false)

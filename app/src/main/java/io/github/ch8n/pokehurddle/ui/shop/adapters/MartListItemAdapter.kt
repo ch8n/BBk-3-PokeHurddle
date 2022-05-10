@@ -72,7 +72,7 @@ class MartItemVH(
                     .load(berry.sprite)
                     .into(imgMartItem)
                 labelMartItem.text = berry.name
-                labelMartPrice.text = "${berry.attractionRate} Poke-coins"
+                labelMartPrice.text = "${berry.martCost} Poke-coins"
                 root.setOnClickListener {
                     onBerryClicked.invoke(berry)
                 }
@@ -83,7 +83,7 @@ class MartItemVH(
                     .load(pokeball.sprite)
                     .into(imgMartItem)
                 labelMartItem.text = pokeball.name
-                labelMartPrice.text = "${pokeball.successRate} Poke-coins"
+                labelMartPrice.text = "${pokeball.martCost} Poke-coins"
                 root.setOnClickListener {
                     onPokeballClicked.invoke(pokeball)
                 }

@@ -36,6 +36,8 @@
         android:fontFamily="@font/poppins_regular"
         android:gravity="center"
         android:text="Explore!"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:textColor="@color/black"
         android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"

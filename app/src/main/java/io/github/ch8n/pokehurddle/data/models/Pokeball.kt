@@ -11,31 +11,31 @@ enum class Pokeball(
     MasterBall(
         successRate = 80,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png",
-        martCost = 80
+        martCost = 180
     ),
 
     UltraBall(
         successRate = 60,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png",
-        martCost = 60
+        martCost = 160
     ),
 
     GreatBall(
         successRate = 40,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png",
-        martCost = 40
+        martCost = 140
     ),
 
     LuxuryBall(
         successRate = 30,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png",
-        martCost = 30
+        martCost = 130
     ),
 
     NormalBall(
         successRate = 20,
         sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
-        martCost = 20
+        martCost = 120
     ),
 
 }
