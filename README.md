@@ -3,9 +3,10 @@
 Third application for Big Brain Kotlin book, will be pokemon collecting app 11285 Pokemon and become
 Pokemon Master!
 
-## ScreenShots
-
+## BluePrint
 ![Image](/assets/img.png)
+
+## ScreenShots
 ![Image](/assets/img_1.png)
 ![Image](/assets/img_2.png)
 
