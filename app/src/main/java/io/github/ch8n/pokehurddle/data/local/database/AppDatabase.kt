@@ -14,7 +14,7 @@ import io.github.ch8n.pokehurddle.data.local.sources.PokemonDAO
 import io.github.ch8n.pokehurddle.data.models.*
 
 
-@Database(entities = [Player::class, PokemonDTO::class], version = 1)
+@Database(entities = [Player::class, Pokemon::class], version = 1)
 @TypeConverters(
     BerriesMapConverter::class,
     PokeballMapConverter::class,

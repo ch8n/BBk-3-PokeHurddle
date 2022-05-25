@@ -1,36 +1,36 @@
 package io.github.ch8n.pokehurddle.data.models
 
+// pokehurddle/data/models/Berry.kt
 enum class Berries(
-    val sprite: String,
-    val attractionRate: Int,
-    val martCost: Int,
+    val imageUrl: String,
+    val tastePoints: Int,
+    val price: Int,
 ) {
     PomegBerry(
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pomeg-berry.png",
-        attractionRate = 100,
-        martCost = 140
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pomeg-berry.png",
+        tastePoints = 100,
+        price = 55
     ),
     KelpsyBerry(
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kelpsy-berry.png",
-        attractionRate = 80,
-        martCost = 160
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/kelpsy-berry.png",
+        tastePoints = 80,
+        price = 75
     ),
     QualotBerry(
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/qualot-berry.png",
-        attractionRate = 60,
-        martCost = 180
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/qualot-berry.png",
+        tastePoints = 60,
+        price = 100
     ),
     HondewBerry(
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hondew-berry.png",
-        attractionRate = 40,
-        martCost = 200
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/hondew-berry.png",
+        tastePoints = 40,
+        price = 125
     ),
     GrepaBerry(
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/grepa-berry.png",
-        attractionRate = 20,
-        martCost = 225
-    ),
-    EmptyBerry(sprite = "", attractionRate = 0, martCost = 0);
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/grepa-berry.png",
+        tastePoints = 20,
+        price = 150
+    );
 
     fun getRandomQty(): Int = (1..10).random()
 }

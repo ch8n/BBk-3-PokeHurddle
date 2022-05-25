@@ -22,13 +22,13 @@ class MainViewModel @Inject constructor(
 
     val playerStats = observePlayer()
 
-    private val _martPokemon = MutableStateFlow<PokemonDTO?>(null)
+    private val _martPokemon = MutableStateFlow<Pokemon?>(null)
     val martPokemon = _martPokemon.asStateFlow()
 
     private val _isBattleEscaped = MutableStateFlow<Boolean>(false)
     val isBattleEscaped = _isBattleEscaped.asStateFlow()
 
-    private val _pokemonEncountered = MutableStateFlow<PokemonDTO?>(null)
+    private val _pokemonEncountered = MutableStateFlow<Pokemon?>(null)
     val pokemonEncountered = _pokemonEncountered.asStateFlow()
 
     init {
@@ -47,7 +47,7 @@ class MainViewModel @Inject constructor(
         onNothing: () -> Unit,
         onBerry: (berry: Berries, qty: Int) -> Unit,
         onPokeball: (berry: Pokeball) -> Unit,
-        onPokemon: (pokemon: PokemonDTO) -> Unit,
+        onPokemon: (pokemon: Pokemon) -> Unit,
         onMoney: (amount: Int) -> Unit
     ) {
         onLoading.invoke(true)
@@ -69,11 +69,11 @@ class MainViewModel @Inject constructor(
 
     private tailrec suspend fun showPokemon(
         playerStats: Player,
-        onPokemon: (pokemon: PokemonDTO) -> Unit
+        onPokemon: (pokemon: Pokemon) -> Unit
     ) {
         val randomPokemon =
             kotlin.runCatching { randomEvent.getRandomPokemon().first() }.getOrNull()
-        val playerPokemon = playerStats.pokemon.find { it.id == randomPokemon?.id }
+        val playerPokemon = playerStats.pokemons.find { it.id == randomPokemon?.id }
         if (playerPokemon != null || randomPokemon == null) {
             // player already has pokemon find new
             showPokemon(playerStats, onPokemon)
@@ -85,7 +85,7 @@ class MainViewModel @Inject constructor(
 
     private suspend fun addPokeball(playerStats: Player, onPokeball: (pokeball: Pokeball) -> Unit) {
         val randomPokeball = randomEvent.getRandomPokeball().first()
-        val currentPokeballCount = playerStats.pokeball.get(randomPokeball) ?: 0
+        val currentPokeballCount = playerStats.pokeballs.get(randomPokeball) ?: 0
         updatePlayerStats.updatePlayerPokeballs(randomPokeball, currentPokeballCount + 1)
         onPokeball.invoke(randomPokeball)
     }
@@ -135,7 +135,7 @@ class MainViewModel @Inject constructor(
         playerStats: Player,
         onLostPokeball: (pokeball: Pokeball) -> Unit
     ) {
-        val (ball, currentQty) = playerStats.pokeball.entries.random()
+        val (ball, currentQty) = playerStats.pokeballs.entries.random()
         val lossValue = 1
         var updatedQty = currentQty - lossValue
         if (updatedQty < 0) updatedQty = 0
@@ -168,10 +168,10 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             kotlin.runCatching {
                 val playerStats = playerStats.first()
-                if (playerStats.money >= berry.martCost) {
+                if (playerStats.money >= berry.price) {
                     val updatedQty = (playerStats.berries.get(berry) ?: 0) + 1
                     updatePlayerStats.updatePlayerBerries(berry, updatedQty)
-                    val remainingCoins = playerStats.money - berry.martCost
+                    val remainingCoins = playerStats.money - berry.price
                     updatePlayerStats.updatePlayerMoney(money = remainingCoins)
                     onSuccess.invoke()
                 } else {
@@ -186,10 +186,10 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             kotlin.runCatching {
                 val playerStats = playerStats.first()
-                if (playerStats.money >= pokeball.martCost) {
-                    val updatedQty = (playerStats.pokeball.get(pokeball) ?: 0) + 1
+                if (playerStats.money >= pokeball.price) {
+                    val updatedQty = (playerStats.pokeballs.get(pokeball) ?: 0) + 1
                     updatePlayerStats.updatePlayerPokeballs(pokeball, updatedQty)
-                    val remainingCoins = playerStats.money - pokeball.martCost
+                    val remainingCoins = playerStats.money - pokeball.price
                     updatePlayerStats.updatePlayerMoney(money = remainingCoins)
                     onSuccess.invoke()
                 } else {
@@ -227,7 +227,7 @@ class MainViewModel @Inject constructor(
         val pokemon = pokemonEncountered.value ?: return@launch onFailed.invoke()
         val qty = playerStats.berries.get(berry) ?: 0
         if (qty > 0) {
-            val percent = pokemon.health / berry.attractionRate
+            val percent = pokemon.health / berry.tastePoints
             onSuccess.invoke(percent)
             val updatedQty = qty - 1
             updatePlayerStats.updatePlayerBerries(berry, updatedQty)
@@ -240,7 +240,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             delay(500)
             val playerStats = playerStats.first()
-            val qty = playerStats.pokeball.get(ball) ?: 0
+            val qty = playerStats.pokeballs.get(ball) ?: 0
             if (qty > 0) {
                 onSuccess.invoke()
                 val updatedQty = qty - 1

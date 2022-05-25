@@ -3,7 +3,7 @@ package io.github.ch8n.pokehurddle.data.repository
 import io.github.ch8n.pokehurddle.data.local.sources.PlayerDAO
 import io.github.ch8n.pokehurddle.data.local.sources.PokemonDAO
 import io.github.ch8n.pokehurddle.data.models.Player
-import io.github.ch8n.pokehurddle.data.models.PokemonDTO
+import io.github.ch8n.pokehurddle.data.models.Pokemon
 import io.github.ch8n.pokehurddle.data.remote.PokemonService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -28,8 +28,8 @@ class AppRepository @Inject constructor(
         pokemonDAO.getPokemon(id)
     }
 
-    suspend fun savePokemon(pokemonDTO: PokemonDTO) = withContext(ioDispatcher) {
-        pokemonDAO.savePokemon(pokemonDTO)
+    suspend fun savePokemon(pokemon: Pokemon) = withContext(ioDispatcher) {
+        pokemonDAO.savePokemon(pokemon)
     }
 
     fun getPlayer(): Flow<Player> = playerDAO.getPlayer().map {

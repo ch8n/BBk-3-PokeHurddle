@@ -1,41 +1,40 @@
 package io.github.ch8n.pokehurddle.data.models
 
+// pokehurddle/data/models/Pokeball.kt
 enum class Pokeball(
-    val successRate: Int,
-    val sprite: String,
-    val martCost: Int,
+    val captureRate: Int,
+    val imageUrl: String,
+    val price: Int,
 ) {
 
-    EmptyBall(sprite = "", successRate = 0, martCost = 0),
-
     MasterBall(
-        successRate = 80,
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png",
-        martCost = 180
+        captureRate = 80,
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png",
+        price = 180
     ),
 
     UltraBall(
-        successRate = 60,
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png",
-        martCost = 160
+        captureRate = 60,
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/ultra-ball.png",
+        price = 160
     ),
 
     GreatBall(
-        successRate = 40,
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png",
-        martCost = 140
+        captureRate = 40,
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/great-ball.png",
+        price = 140
     ),
 
     LuxuryBall(
-        successRate = 30,
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png",
-        martCost = 130
+        captureRate = 30,
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/luxury-ball.png",
+        price = 130
     ),
 
     NormalBall(
-        successRate = 20,
-        sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
-        martCost = 120
+        captureRate = 20,
+        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png",
+        price = 120
     ),
 
 }

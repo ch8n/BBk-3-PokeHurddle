@@ -2,7 +2,7 @@ package io.github.ch8n.pokehurddle.data.usecases
 
 import io.github.ch8n.pokehurddle.data.models.Berries
 import io.github.ch8n.pokehurddle.data.models.Pokeball
-import io.github.ch8n.pokehurddle.data.models.PokemonDTO
+import io.github.ch8n.pokehurddle.data.models.Pokemon
 import io.github.ch8n.pokehurddle.data.repository.AppRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
@@ -44,8 +44,8 @@ class UpdatePlayerPokeballs @Inject constructor(
         userUpdateLock.withLock {
             val currentPlayerStats = appRepository.getPlayer().first()
             with(currentPlayerStats) {
-                val updatedPokeBalls = this.pokeball.toMutableMap().apply { put(pokeball, qty) }
-                val updatedPlayer = copy(pokeball = updatedPokeBalls)
+                val updatedPokeBalls = this.pokeballs.toMutableMap().apply { put(pokeball, qty) }
+                val updatedPlayer = copy(pokeballs = updatedPokeBalls)
                 appRepository.savePlayer(updatedPlayer)
             }
         }
@@ -73,13 +73,13 @@ class UpdatePlayerPokemon @Inject constructor(
     private val appRepository: AppRepository,
     private val userUpdateLock: Mutex
 ) {
-    suspend operator fun invoke(pokemonDTO: PokemonDTO) {
+    suspend operator fun invoke(pokemon: Pokemon) {
         userUpdateLock.withLock {
             val currentPlayerStats = appRepository.getPlayer().first()
             with(currentPlayerStats) {
-                val currentPokemonList = this.pokemon
-                val updatedPokemonList = currentPokemonList + pokemonDTO
-                val updatedPlayer = copy(pokemon = updatedPokemonList)
+                val currentPokemonList = this.pokemons
+                val updatedPokemonList = currentPokemonList + pokemon
+                val updatedPlayer = copy(pokemons = updatedPokemonList)
                 appRepository.savePlayer(updatedPlayer)
             }
         }

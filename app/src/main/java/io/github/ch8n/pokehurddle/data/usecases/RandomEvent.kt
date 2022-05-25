@@ -4,7 +4,7 @@ import io.github.ch8n.pokehurddle.data.models.Berries.*
 import io.github.ch8n.pokehurddle.data.models.Encounter.*
 import io.github.ch8n.pokehurddle.data.models.Encounter.Nothing
 import io.github.ch8n.pokehurddle.data.models.Pokeball.*
-import io.github.ch8n.pokehurddle.data.models.PokemonDTO
+import io.github.ch8n.pokehurddle.data.models.Pokemon
 import io.github.ch8n.pokehurddle.data.repository.AppRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -80,7 +80,7 @@ class GetRandomPokeball @Inject constructor() {
 class GetRandomPokemon @Inject constructor(
     private val appRepository: AppRepository,
 ) {
-    operator fun invoke() = flow<PokemonDTO> {
+    operator fun invoke() = flow<Pokemon> {
         val randomPokemonIndex = (0..1126).shuffled().first()
 
         val pokemon = kotlin.runCatching {

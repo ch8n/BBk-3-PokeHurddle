@@ -69,10 +69,10 @@ class MartItemVH(
             MartItemType.POKE_BERRY -> {
                 val berry = berries.get(position)
                 Glide.with(root.context)
-                    .load(berry.sprite)
+                    .load(berry.imageUrl)
                     .into(imgMartItem)
                 labelMartItem.text = berry.name
-                labelMartPrice.text = "${berry.martCost} Poke-coins"
+                labelMartPrice.text = "${berry.price} Poke-coins"
                 root.setOnClickListener {
                     onBerryClicked.invoke(berry)
                 }
@@ -80,10 +80,10 @@ class MartItemVH(
             MartItemType.POKE_BALL -> {
                 val pokeball = pokeballs.get(position)
                 Glide.with(root.context)
-                    .load(pokeball.sprite)
+                    .load(pokeball.imageUrl)
                     .into(imgMartItem)
                 labelMartItem.text = pokeball.name
-                labelMartPrice.text = "${pokeball.martCost} Poke-coins"
+                labelMartPrice.text = "${pokeball.price} Poke-coins"
                 root.setOnClickListener {
                     onPokeballClicked.invoke(pokeball)
                 }

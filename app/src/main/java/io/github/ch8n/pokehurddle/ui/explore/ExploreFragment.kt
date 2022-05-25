@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.R
-import io.github.ch8n.pokehurddle.data.models.PokemonDTO
+import io.github.ch8n.pokehurddle.data.models.Pokemon
 import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
@@ -23,7 +23,7 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
 
     private val viewModel: MainViewModel by activityViewModels()
 
-    private fun FragmentExploreBinding.displayPokemon(pokemon: PokemonDTO) {
+    private fun FragmentExploreBinding.displayPokemon(pokemon: Pokemon) {
         containerPokemon.setVisible(true)
         btnExplore.setVisible(false)
 
@@ -69,7 +69,7 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
         btnPet.setOnClickListener {
             lifecycleScope.launchWhenResumed {
                 val playerStats = viewModel.playerStats.firstOrNull() ?: return@launchWhenResumed
-                val isPokeballPresent = playerStats.pokeball.values.sum() > 0
+                val isPokeballPresent = playerStats.pokeballs.values.sum() > 0
                 val isBerriePresent = playerStats.berries.values.sum() > 0
                 if (isPokeballPresent && isBerriePresent) {
                     findNavController().navigate(R.id.action_exploreFragment_to_petFragment)
@@ -94,7 +94,7 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
                 onBerry = { berry, qty ->
                     containerPokemon.setVisible(false)
                     Glide.with(requireContext())
-                        .load(berry.sprite)
+                        .load(berry.imageUrl)
                         .into(imgEncounter)
                     labelEncounter.text = "You found ${
                         berry.name.capitalize()
@@ -107,7 +107,7 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
                 onPokeball = { pokeball ->
                     containerPokemon.setVisible(false)
                     Glide.with(requireContext())
-                        .load(pokeball.sprite)
+                        .load(pokeball.imageUrl)
                         .into(imgEncounter)
                     labelEncounter.text = "You found ${
                         pokeball.name.capitalize()

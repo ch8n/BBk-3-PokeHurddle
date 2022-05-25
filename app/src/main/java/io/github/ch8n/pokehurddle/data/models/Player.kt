@@ -7,16 +7,16 @@ import androidx.room.PrimaryKey
 data class Player(
     @PrimaryKey val id: String,
     val berries: Map<Berries, Int>,
-    val pokeball: Map<Pokeball, Int>,
-    val pokemon: List<PokemonDTO>,
+    val pokeballs: Map<Pokeball, Int>,
+    val pokemons: List<Pokemon>,
     val money: Int
 ) {
     companion object {
         val Empty = Player(
             id = "",
             berries = emptyMap(),
-            pokeball = emptyMap(),
-            pokemon = emptyList(),
+            pokeballs = emptyMap(),
+            pokemons = emptyList(),
             money = 0
         )
     }

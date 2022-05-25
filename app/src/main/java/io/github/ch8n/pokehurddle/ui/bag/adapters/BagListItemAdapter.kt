@@ -81,7 +81,7 @@ class BagItemVH(private val binding: ListCellBagItemBinding) :
                 val playerQty = playerStats.berries.get(berry) ?: 0
 
                 Glide.with(root.context)
-                    .load(berry.sprite)
+                    .load(berry.imageUrl)
                     .into(imgItem)
 
                 labelItem.text = berry.name
@@ -92,10 +92,10 @@ class BagItemVH(private val binding: ListCellBagItemBinding) :
             }
             BagListType.POKE_BALL -> {
                 val pokeball = pokeballs.get(position)
-                val playerQty = playerStats.pokeball.get(pokeball) ?: 0
+                val playerQty = playerStats.pokeballs.get(pokeball) ?: 0
 
                 Glide.with(root.context)
-                    .load(pokeball.sprite)
+                    .load(pokeball.imageUrl)
                     .into(imgItem)
 
                 labelItem.text = pokeball.name

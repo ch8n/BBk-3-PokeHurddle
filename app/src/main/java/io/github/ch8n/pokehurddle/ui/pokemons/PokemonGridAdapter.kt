@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import io.github.ch8n.pokehurddle.data.models.PokemonDTO
+import io.github.ch8n.pokehurddle.data.models.Pokemon
 import io.github.ch8n.pokehurddle.databinding.ListCellPokemonBinding
 
 class PokemonGridAdapter private constructor(
-    diffUtil: DiffUtil.ItemCallback<PokemonDTO>
-) : ListAdapter<PokemonDTO, PokemonVH>(diffUtil) {
+    diffUtil: DiffUtil.ItemCallback<Pokemon>
+) : ListAdapter<Pokemon, PokemonVH>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonVH {
         val binding = ListCellPokemonBinding
@@ -24,11 +24,11 @@ class PokemonGridAdapter private constructor(
     }
 
     companion object {
-        private val diffUtil = object : DiffUtil.ItemCallback<PokemonDTO>() {
-            override fun areItemsTheSame(oldItem: PokemonDTO, newItem: PokemonDTO): Boolean =
+        private val diffUtil = object : DiffUtil.ItemCallback<Pokemon>() {
+            override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean =
                 oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: PokemonDTO, newItem: PokemonDTO): Boolean =
+            override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean =
                 oldItem == newItem
         }
 
@@ -39,10 +39,10 @@ class PokemonGridAdapter private constructor(
 class PokemonVH(private val binding: ListCellPokemonBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun onBind(pokemonDTO: PokemonDTO) = with(binding) {
+    fun onBind(pokemon: Pokemon) = with(binding) {
         Glide.with(root.context)
-            .load(pokemonDTO.sprites.front_default)
+            .load(pokemon.sprites.front_default)
             .into(imgPokemon)
-        labelPokemon.text = pokemonDTO.name
+        labelPokemon.text = pokemon.name
     }
 }

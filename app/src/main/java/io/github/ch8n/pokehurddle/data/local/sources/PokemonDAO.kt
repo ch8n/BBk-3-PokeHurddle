@@ -4,14 +4,14 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.github.ch8n.pokehurddle.data.models.PokemonDTO
+import io.github.ch8n.pokehurddle.data.models.Pokemon
 
 @Dao
 interface PokemonDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun savePokemon(vararg pokemonDTO: PokemonDTO)
+    suspend fun savePokemon(vararg pokemon: Pokemon)
 
-    @Query("SELECT * FROM PokemonDTO WHERE PokemonDTO.id=:id")
-    suspend fun getPokemon(id: Int): PokemonDTO?
+    @Query("SELECT * FROM Pokemon WHERE Pokemon.id=:id")
+    suspend fun getPokemon(id: Int): Pokemon?
 }

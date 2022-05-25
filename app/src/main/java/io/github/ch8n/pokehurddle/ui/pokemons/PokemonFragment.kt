@@ -23,7 +23,7 @@ class PokemonFragment : ViewBindingFragment<FragmentPokemonBinding>() {
         gridPokemon.adapter = gridAdapter
         lifecycleScope.launchWhenResumed {
             viewModel.playerStats.collect {
-                gridAdapter.submitList(it.pokemon)
+                gridAdapter.submitList(it.pokemons)
             }
         }
     }

@@ -62,7 +62,7 @@ class CatchPokemonFragment : ViewBindingFragment<FragmentPetBinding>() {
 
     fun catchSuccess(ball: Pokeball) = with(binding) {
         val fillPercent = (progressLove.progress.toFloat() / progressLove.max.toFloat()) * 100
-        val isCaptured = (100 - fillPercent) <= ball.successRate
+        val isCaptured = (100 - fillPercent) <= ball.captureRate
         val msg = if (isCaptured) "Gotcha!!" else "Pokemon Ran away!"
         val snack = msg.snack(snackContainer)
         if (isCaptured) { viewModel.captureEncounteredPokemon() }
