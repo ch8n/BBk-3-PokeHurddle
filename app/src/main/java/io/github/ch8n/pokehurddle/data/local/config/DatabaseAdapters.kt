@@ -9,39 +9,19 @@ import io.github.ch8n.pokehurddle.data.models.Pokemon
 import io.github.ch8n.pokehurddle.data.models.Stat
 import java.lang.reflect.Type
 
-class BerriesMapConverter {
+class StringMapConverter {
 
     companion object {
         @TypeConverter
         @JvmStatic
-        fun fromString(value: String): Map<Berries, Int> {
-            val mapType: Type = object : TypeToken<Map<Berries, Int>>() {}.type
+        fun fromString(value: String): Map<String, Int> {
+            val mapType: Type = object : TypeToken<Map<String, Int>>() {}.type
             return Gson().fromJson(value, mapType)
         }
 
         @TypeConverter
         @JvmStatic
-        fun fromStringMap(value: Map<Berries, Int>): String {
-            val gson = Gson()
-            return gson.toJson(value)
-        }
-    }
-
-}
-
-class PokeballMapConverter {
-
-    companion object {
-        @TypeConverter
-        @JvmStatic
-        fun fromString(value: String): Map<Pokeball, Int> {
-            val mapType: Type = object : TypeToken<Map<Pokeball, Int>>() {}.type
-            return Gson().fromJson(value, mapType)
-        }
-
-        @TypeConverter
-        @JvmStatic
-        fun fromStringMap(value: Map<Pokeball, Int>): String {
+        fun fromStringMap(value: Map<String, Int>): String {
             val gson = Gson()
             return gson.toJson(value)
         }
@@ -50,7 +30,6 @@ class PokeballMapConverter {
 }
 
 class PokemonListConverter {
-
     companion object {
         @TypeConverter
         @JvmStatic
@@ -68,24 +47,3 @@ class PokemonListConverter {
     }
 
 }
-
-class PokemonStatsListConverter {
-
-    companion object {
-        @TypeConverter
-        @JvmStatic
-        fun fromString(value: String): List<Stat> {
-            val valueType = object : TypeToken<List<Stat>>() {}.type
-            return Gson().fromJson(value, valueType)
-        }
-
-        @TypeConverter
-        @JvmStatic
-        fun fromStringMap(value: List<Stat>): String {
-            val gson = Gson()
-            return gson.toJson(value)
-        }
-    }
-
-}
-

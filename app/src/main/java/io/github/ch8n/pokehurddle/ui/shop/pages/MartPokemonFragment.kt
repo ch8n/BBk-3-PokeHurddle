@@ -37,7 +37,7 @@ class MartPokemonFragment : ViewBindingFragment<FragmentMartPokemonBinding>() {
                 }
 
                 Glide.with(requireContext())
-                    .load(pokemon.sprites.front_default)
+                    .load(pokemon.imageUrl)
                     .into(imgPokemon)
 
                 labelPokemonName.text = pokemon.name

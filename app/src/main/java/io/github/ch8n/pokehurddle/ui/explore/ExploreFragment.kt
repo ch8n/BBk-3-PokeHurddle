@@ -28,7 +28,7 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
         btnExplore.setVisible(false)
 
         Glide.with(requireContext())
-            .load(pokemon.sprites.front_default)
+            .load(pokemon.imageUrl)
             .into(imgEncounter)
 
         labelEncounter.text = pokemon.name.replaceFirstChar {

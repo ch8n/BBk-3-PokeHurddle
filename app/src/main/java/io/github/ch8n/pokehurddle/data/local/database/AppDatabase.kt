@@ -5,21 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import io.github.ch8n.pokehurddle.data.local.config.BerriesMapConverter
-import io.github.ch8n.pokehurddle.data.local.config.PokeballMapConverter
 import io.github.ch8n.pokehurddle.data.local.config.PokemonListConverter
-import io.github.ch8n.pokehurddle.data.local.config.PokemonStatsListConverter
+import io.github.ch8n.pokehurddle.data.local.config.StringMapConverter
 import io.github.ch8n.pokehurddle.data.local.sources.PlayerDAO
 import io.github.ch8n.pokehurddle.data.local.sources.PokemonDAO
-import io.github.ch8n.pokehurddle.data.models.*
+import io.github.ch8n.pokehurddle.data.models.Player
+import io.github.ch8n.pokehurddle.data.models.Pokemon
 
 
 @Database(entities = [Player::class, Pokemon::class], version = 1)
 @TypeConverters(
-    BerriesMapConverter::class,
-    PokeballMapConverter::class,
+    StringMapConverter::class,
     PokemonListConverter::class,
-    PokemonStatsListConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
 

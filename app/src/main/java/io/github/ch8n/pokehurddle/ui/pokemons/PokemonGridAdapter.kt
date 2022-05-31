@@ -41,7 +41,7 @@ class PokemonVH(private val binding: ListCellPokemonBinding) :
 
     fun onBind(pokemon: Pokemon) = with(binding) {
         Glide.with(root.context)
-            .load(pokemon.sprites.front_default)
+            .load(pokemon.imageUrl)
             .into(imgPokemon)
         labelPokemon.text = pokemon.name
     }

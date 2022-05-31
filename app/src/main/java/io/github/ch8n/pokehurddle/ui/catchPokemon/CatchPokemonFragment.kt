@@ -42,7 +42,7 @@ class CatchPokemonFragment : ViewBindingFragment<FragmentPetBinding>() {
         }.attach()
 
         Glide.with(requireContext())
-            .load(pokemonInBattle.sprites.front_default)
+            .load(pokemonInBattle.imageUrl)
             .into(imgPokemon)
 
         labelPokemon.text = pokemonInBattle.name

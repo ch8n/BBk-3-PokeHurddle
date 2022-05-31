@@ -3,6 +3,7 @@ package io.github.ch8n.pokehurddle.data.remote
 import android.util.Log
 import com.google.gson.Gson
 import io.github.ch8n.pokehurddle.data.models.Pokemon
+import io.github.ch8n.pokehurddle.data.models.PokemonDTO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -18,7 +19,7 @@ class PokemonService @Inject constructor(
 ) {
 
     // fetch pokemon with ID
-    suspend fun fetchPokemon(id: Int): Pokemon? = withContext(Dispatchers.IO) {
+    suspend fun fetchPokemon(id: Int): PokemonDTO? = withContext(Dispatchers.IO) {
         // this scope runs over IO dispatcher not on main dispatcher.
 
         // 👇 api url where we will fetch pokemon details from
@@ -35,7 +36,7 @@ class PokemonService @Inject constructor(
             //👇 get response body as string
             val jsonString = data.body?.string()
             //👇 convert jsonString to Pokemon instance
-            Gson().fromJson(jsonString, Pokemon::class.java)
+            Gson().fromJson(jsonString, PokemonDTO::class.java)
         }
 
         // 👇 we will get pokemon instance if api call went well or..

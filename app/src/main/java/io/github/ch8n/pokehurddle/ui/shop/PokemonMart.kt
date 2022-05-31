@@ -25,7 +25,7 @@ class PokemonMart : ViewBindingFragment<FragmentMartBinding>() {
 
         lifecycleScope.launchWhenResumed {
             viewModel.playerStats.collect {
-                labelWallet.text = "Wallet : (${it.money}) P`Coins"
+                labelWallet.text = "Wallet : (${it.coins}) P`Coins"
             }
         }
 

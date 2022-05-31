@@ -10,8 +10,8 @@ import io.github.ch8n.pokehurddle.data.local.database.AppDatabase
 import io.github.ch8n.pokehurddle.data.local.sources.PlayerDAO
 import io.github.ch8n.pokehurddle.data.local.sources.PokemonDAO
 import io.github.ch8n.pokehurddle.data.remote.PokemonService
-import io.github.ch8n.pokehurddle.data.repository.AppRepository
-import kotlinx.coroutines.Dispatchers
+import io.github.ch8n.pokehurddle.data.repository.PlayerRepository
+import io.github.ch8n.pokehurddle.data.repository.PokemonRepository
 import kotlinx.coroutines.sync.Mutex
 import okhttp3.OkHttpClient
 import javax.inject.Singleton
@@ -44,14 +44,4 @@ object DataModule {
     @Singleton
     @Provides
     fun provideUserUpdateLock() = Mutex()
-
-    @Singleton
-    @Provides
-    fun provideAppRepository(
-        pokemonService: PokemonService,
-        pokemonDAO: PokemonDAO,
-        playerDAO: PlayerDAO
-    ) = AppRepository(pokemonService, pokemonDAO, playerDAO, Dispatchers.IO)
-
-
 }

@@ -5,19 +5,19 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Player(
-    @PrimaryKey val id: String,
-    val berries: Map<Berries, Int>,
-    val pokeballs: Map<Pokeball, Int>,
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    val berries: Map<String, Int>,
+    val pokeballs: Map<String, Int>,
     val pokemons: List<Pokemon>,
-    val money: Int
+    val coins: Int
 ) {
     companion object {
         val Empty = Player(
-            id = "",
+            id = 0,
             berries = emptyMap(),
             pokeballs = emptyMap(),
             pokemons = emptyList(),
-            money = 0
+            coins = 0
         )
     }
 }
