@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.di
+package io.github.ch8n.pokehurddle.data.di
 
 import android.content.Context
 import dagger.Module
@@ -7,11 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.ch8n.pokehurddle.data.local.database.AppDatabase
-import io.github.ch8n.pokehurddle.data.local.sources.PlayerDAO
-import io.github.ch8n.pokehurddle.data.local.sources.PokemonDAO
 import io.github.ch8n.pokehurddle.data.remote.PokemonService
-import io.github.ch8n.pokehurddle.data.repository.PlayerRepository
-import io.github.ch8n.pokehurddle.data.repository.PokemonRepository
 import kotlinx.coroutines.sync.Mutex
 import okhttp3.OkHttpClient
 import javax.inject.Singleton
