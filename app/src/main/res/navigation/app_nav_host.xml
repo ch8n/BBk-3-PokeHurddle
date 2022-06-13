@@ -42,6 +42,6 @@
         android:label="PetFragment" />
     <fragment
         android:id="@+id/pokemonMart"
-        android:name="io.github.ch8n.pokehurddle.ui.shop.PokemonMart"
+        android:name="io.github.ch8n.pokehurddle.ui.pokeMart.PokeMartFragment"
         android:label="PokemonMart" />
 </navigation>

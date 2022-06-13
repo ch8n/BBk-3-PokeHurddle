@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.ch8n.pokehurddle.data.models.*
-import io.github.ch8n.pokehurddle.data.usecases.PlayerStatsObserverUseCase
 import io.github.ch8n.pokehurddle.data.usecases.PlayerStatsUseCase
 import io.github.ch8n.pokehurddle.data.usecases.PokemonWorldUseCase
 import kotlinx.coroutines.delay
@@ -15,15 +14,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val observePlayer: PlayerStatsObserverUseCase,
-    private val playerStatsUsecase: PlayerStatsUseCase,
+    private val playerStatsUseCase: PlayerStatsUseCase,
     private val pokemonWorldUseCase: PokemonWorldUseCase,
 ) : ViewModel() {
 
-    val playerStats = observePlayer()
-
+    // we cache pokemon of the day to be stored till instance of viewmodel is alive
     private val _martPokemon = MutableStateFlow<Pokemon?>(null)
+    // public read only state of mart pokemon
     val martPokemon = _martPokemon.asStateFlow()
+
+    init {
+        // get random pokemon
+        getPokemonOfTheDay()
+    }
+
+    fun getPokemonOfTheDay() {
+        // get random pokemon on update mart pokemon state flow
+        pokemonWorldUseCase.getRandomPokemon()
+            .catch { e -> Log.e("Error", "failed pokemon", e) }
+            .onEach { _martPokemon.emit(it) }
+            .launchIn(viewModelScope)
+    }
+
+    val playerStats = playerStatsUseCase.observerPlayer()
 
     private val _isBattleEscaped = MutableStateFlow<Boolean>(false)
     val isBattleEscaped = _isBattleEscaped.asStateFlow()
@@ -31,16 +44,6 @@ class MainViewModel @Inject constructor(
     private val _pokemonEncountered = MutableStateFlow<Pokemon?>(null)
     val pokemonEncountered = _pokemonEncountered.asStateFlow()
 
-    init {
-        getMartPokemon()
-    }
-
-    fun getMartPokemon() {
-        pokemonWorldUseCase.getRandomPokemon()
-            .catch { e -> Log.e("Error", "failed pokemon", e) }
-            .onEach { _martPokemon.emit(it) }
-            .launchIn(viewModelScope)
-    }
 
     fun generateRandomEncounter(
         onLoading: (isLoading: Boolean) -> Unit,
@@ -86,14 +89,14 @@ class MainViewModel @Inject constructor(
     private suspend fun addPokeball(playerStats: Player, onPokeball: (pokeball: Pokeball) -> Unit) {
         val randomPokeball = pokemonWorldUseCase.getRandomPokeball()
         val currentPokeballCount = playerStats.pokeballs.get(randomPokeball.name) ?: 0
-        playerStatsUsecase.updatePlayerPokeballs(randomPokeball.name, currentPokeballCount + 1)
+        playerStatsUseCase.updatePlayerPokeballs(randomPokeball.name, currentPokeballCount + 1)
         onPokeball.invoke(randomPokeball)
     }
 
     private suspend fun addRandomMoney(playerStats: Player, onMoney: (amount: Int) -> Unit) {
         val currentMoney = playerStats.coins
         val randomMoney = pokemonWorldUseCase.getRandomCoins()
-        playerStatsUsecase.updatePlayerCoins(currentMoney + randomMoney)
+        playerStatsUseCase.updatePlayerCoins(currentMoney + randomMoney)
         onMoney.invoke(randomMoney)
     }
 
@@ -105,7 +108,7 @@ class MainViewModel @Inject constructor(
         val randomQty = randomBerry.getRandomQty()
         val currentQty = playerStats.berries.get(randomBerry.name) ?: 0
         val updatedQty = currentQty + randomQty
-        playerStatsUsecase.updatePlayerBerries(randomBerry.name, updatedQty)
+        playerStatsUseCase.updatePlayerBerries(randomBerry.name, updatedQty)
         onBerry.invoke(randomBerry, randomQty)
     }
 
@@ -139,7 +142,7 @@ class MainViewModel @Inject constructor(
         val lossValue = 1
         var updatedQty = currentQty - lossValue
         if (updatedQty < 0) updatedQty = 0
-        playerStatsUsecase.updatePlayerPokeballs(ball, updatedQty)
+        playerStatsUseCase.updatePlayerPokeballs(ball, updatedQty)
         onLostPokeball.invoke(Pokeball.valueOf(ball))
     }
 
@@ -148,7 +151,7 @@ class MainViewModel @Inject constructor(
         val lossValue = (1..5).random()
         var updatedQty = currentCoins - lossValue
         if (updatedQty < 0) updatedQty = 0
-        playerStatsUsecase.updatePlayerCoins(updatedQty)
+        playerStatsUseCase.updatePlayerCoins(updatedQty)
         onLostMoney.invoke(lossValue)
     }
 
@@ -160,7 +163,7 @@ class MainViewModel @Inject constructor(
         val lossValue = (1..5).random()
         var updatedQty = currentQty - lossValue
         if (updatedQty < 0) updatedQty = 0
-        playerStatsUsecase.updatePlayerBerries(berry, updatedQty)
+        playerStatsUseCase.updatePlayerBerries(berry, updatedQty)
         onLostBerry.invoke(Berries.valueOf(berry), lossValue)
     }
 
@@ -170,9 +173,9 @@ class MainViewModel @Inject constructor(
                 val playerStats = playerStats.first()
                 if (playerStats.coins >= berry.price) {
                     val updatedQty = (playerStats.berries.get(berry.name) ?: 0) + 1
-                    playerStatsUsecase.updatePlayerBerries(berry.name, updatedQty)
+                    playerStatsUseCase.updatePlayerBerries(berry.name, updatedQty)
                     val remainingCoins = playerStats.coins - berry.price
-                    playerStatsUsecase.updatePlayerCoins(money = remainingCoins)
+                    playerStatsUseCase.updatePlayerCoins(money = remainingCoins)
                     onSuccess.invoke()
                 } else {
                     onFailed.invoke()
@@ -188,9 +191,9 @@ class MainViewModel @Inject constructor(
                 val playerStats = playerStats.first()
                 if (playerStats.coins >= pokeball.price) {
                     val updatedQty = (playerStats.pokeballs.get(pokeball.name) ?: 0) + 1
-                    playerStatsUsecase.updatePlayerPokeballs(pokeball.name, updatedQty)
+                    playerStatsUseCase.updatePlayerPokeballs(pokeball.name, updatedQty)
                     val remainingCoins = playerStats.coins - pokeball.price
-                    playerStatsUsecase.updatePlayerCoins(money = remainingCoins)
+                    playerStatsUseCase.updatePlayerCoins(money = remainingCoins)
                     onSuccess.invoke()
                 } else {
                     onFailed.invoke()
@@ -206,9 +209,9 @@ class MainViewModel @Inject constructor(
                 val playerStats = playerStats.first()
                 val pokemon = martPokemon.value ?: return@launch onFailed.invoke()
                 if (playerStats.coins >= pokemon.health) {
-                    playerStatsUsecase.updatePlayerPokemon(pokemon)
+                    playerStatsUseCase.updatePlayerPokemon(pokemon)
                     val remainingCoins = playerStats.coins - pokemon.health
-                    playerStatsUsecase.updatePlayerCoins(money = remainingCoins)
+                    playerStatsUseCase.updatePlayerCoins(money = remainingCoins)
                     onSuccess.invoke()
                 } else {
                     onFailed.invoke()
@@ -230,7 +233,7 @@ class MainViewModel @Inject constructor(
             val percent = pokemon.health / berry.tastePoints
             onSuccess.invoke(percent)
             val updatedQty = qty - 1
-            playerStatsUsecase.updatePlayerBerries(berry.name, updatedQty)
+            playerStatsUseCase.updatePlayerBerries(berry.name, updatedQty)
         } else {
             onFailed.invoke()
         }
@@ -244,7 +247,7 @@ class MainViewModel @Inject constructor(
             if (qty > 0) {
                 onSuccess.invoke()
                 val updatedQty = qty - 1
-                playerStatsUsecase.updatePlayerPokeballs(ball.name, updatedQty)
+                playerStatsUseCase.updatePlayerPokeballs(ball.name, updatedQty)
             } else {
                 onFailed.invoke()
             }
@@ -259,7 +262,7 @@ class MainViewModel @Inject constructor(
 
     fun captureEncounteredPokemon() = viewModelScope.launch {
         val pokemonDTO = pokemonEncountered.value ?: return@launch
-        playerStatsUsecase.updatePlayerPokemon(pokemonDTO)
+        playerStatsUseCase.updatePlayerPokemon(pokemonDTO)
     }
 
 }

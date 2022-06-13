@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.ui.shop.pages
+package io.github.ch8n.pokehurddle.ui.pokeMart.pages
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -18,40 +18,33 @@ class MartPokemonFragment : ViewBindingFragment<FragmentMartPokemonBinding>() {
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun setup(): Unit = with(binding) {
-
         lifecycleScope.launchWhenResumed {
             viewModel.martPokemon.collect {
-                val pokemon = it ?: kotlin.run {
-
-                    Glide.with(requireContext())
-                        .load(R.drawable.pokeball)
-                        .into(imgPokemon)
-
-                    labelPokemonName.text = "Out of Service!"
-                    labelPokemonPrice.text = "No Pokemon today..."
-                    imgPokemon.setOnClickListener {
-                        viewModel.getMartPokemon()
-                    }
-
-                    return@collect
-                }
+                val pokemon = it
 
                 Glide.with(requireContext())
-                    .load(pokemon.imageUrl)
+                    .load(pokemon?.imageUrl ?: R.drawable.pokeball)
                     .into(imgPokemon)
 
-                labelPokemonName.text = pokemon.name
-                labelPokemonPrice.text = "(${pokemon.health}) P`Coins"
+                labelPokemonName.text = pokemon?.name ?: "Out of Service!"
+                labelPokemonPrice.text = if (pokemon != null) {
+                    "(${pokemon.health}) P`Coins"
+                } else {
+                    "No Pokemon today..."
+                }
 
                 imgPokemon.setOnClickListener {
-                    viewModel.purchasePokemon(
-                        onSuccess = { "You purchased ${pokemon.name}!".snack() },
-                        onFailed = { "You don't have enough Poke-Coins!".snack() }
-                    )
+                    if (pokemon != null) {
+                        viewModel.purchasePokemon(
+                            onSuccess = { "You purchased ${pokemon.name}!".snack() },
+                            onFailed = { "You don't have enough Poke-Coins!".snack() }
+                        )
+                    } else {
+                        viewModel.getPokemonOfTheDay()
+                    }
                 }
             }
         }
-
     }
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentMartPokemonBinding

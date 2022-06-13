@@ -15,7 +15,7 @@ import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 class BagFragment : ViewBindingFragment<FragmentBagBinding>() {
 
     override fun setup() = with(binding) {
-        val adapter = AppPagerAdapter.newInstance(
+        val adapter = AppPagerAdapter(
             fragmentManager = childFragmentManager,
             lifecycle = lifecycle,
             "PokeBalls" to BagItemPokeballFragment(),

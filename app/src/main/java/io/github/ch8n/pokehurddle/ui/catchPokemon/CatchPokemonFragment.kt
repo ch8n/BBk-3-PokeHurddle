@@ -28,7 +28,7 @@ class CatchPokemonFragment : ViewBindingFragment<FragmentPetBinding>() {
 
         val pokemonInBattle = viewModel.pokemonEncountered.value ?: return
 
-        val adapter = AppPagerAdapter.newInstance(
+        val adapter = AppPagerAdapter(
             fragmentManager = childFragmentManager,
             lifecycle = lifecycle,
             "Berries" to BerriesBattleFragment(),

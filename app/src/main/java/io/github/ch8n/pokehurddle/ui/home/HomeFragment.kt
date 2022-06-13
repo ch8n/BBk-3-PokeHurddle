@@ -16,11 +16,6 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentHomeBinding =
         FragmentHomeBinding::inflate
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setup()
-    }
-
     override fun setup() = with(binding) {
 
         imgExplore.setOnClickListener {

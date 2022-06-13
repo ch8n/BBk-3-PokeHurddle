@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.ui.shop.pages
+package io.github.ch8n.pokehurddle.ui.pokeMart.pages
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.databinding.FragmentItemListingBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
-import io.github.ch8n.pokehurddle.ui.shop.adapters.MartItemType
-import io.github.ch8n.pokehurddle.ui.shop.adapters.MartListAdapter
+import io.github.ch8n.pokehurddle.ui.pokeMart.adapters.PokeballListAdapter
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 
 @AndroidEntryPoint
@@ -17,8 +16,7 @@ class MartPokeballFragment : ViewBindingFragment<FragmentItemListingBinding>() {
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun setup() = with(binding) {
-        val pokeballAdapter = MartListAdapter(
-            type = MartItemType.POKE_BALL,
+        val pokeballAdapter = PokeballListAdapter(
             onPokeballClicked = {
                 viewModel.purchasePokeball(
                     pokeball = it,
