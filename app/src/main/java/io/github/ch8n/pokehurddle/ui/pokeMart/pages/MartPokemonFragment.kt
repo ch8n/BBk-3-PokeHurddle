@@ -9,7 +9,6 @@ import io.github.ch8n.pokehurddle.R
 import io.github.ch8n.pokehurddle.databinding.FragmentMartPokemonBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
-import io.github.ch8n.pokehurddle.ui.utils.setVisible
 
 @AndroidEntryPoint
 class MartPokemonFragment : ViewBindingFragment<FragmentMartPokemonBinding>() {
@@ -37,16 +36,15 @@ class MartPokemonFragment : ViewBindingFragment<FragmentMartPokemonBinding>() {
                 //👇 set pokemon name
                 labelPokemonName.text = pokemon.name
                 //👇 set pokemon price
-                val price = pokemon.health / 2
-                labelPokemonPrice.text = "Buy?: Only P`Coins $price/- "
+                labelPokemonPrice.text = "Buy?: Only P`Coins ${pokemon.price}/- "
                 //👇 on click trigger purchase of pokemon
                 imgPokemon.setOnClickListener {
                     viewModel.buyPokemon(
                         pokemon = pokemon,
                         //👇 on purchase success show snackbar message
-                        onSuccess = { "You purchased ${pokemon.name}!".snack() },
+                        onSuccess = { "You purchased ${pokemon.name}!".snack(labelPokemonPrice) },
                         //👇 on  error show snackbar message with error
-                        onError = { msg -> msg.snack() }
+                        onError = { msg -> msg.snack(labelPokemonPrice) }
                     )
                 }
             },

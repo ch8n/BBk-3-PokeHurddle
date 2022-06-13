@@ -80,15 +80,14 @@ class PurchasePokemonUseCase @Inject constructor(
                     ?: return@withContext onError.invoke("Something went wrong!")
 
                 //👇 calculate pokemon price
-                val pokemonPrice = pokemon.health / 2
-                if (playerCoins < pokemonPrice) {
+                if (playerCoins < pokemon.price) {
                     //👇 if player coins has less coins than pokemon price
                     // then error and return
                     onError("You don't have enough Poke-Coins!")
                     return@withContext
                 }
                 //👇 if player has coins then calculate remaining coins
-                val remainingCoins = playerCoins - pokemon.health
+                val remainingCoins = playerCoins - pokemon.price
                 //👇 update player coins and pokemon
                 playerStats.updatePlayerCoins(remainingCoins)
                 playerStats.updatePlayerPokemon(pokemon)
