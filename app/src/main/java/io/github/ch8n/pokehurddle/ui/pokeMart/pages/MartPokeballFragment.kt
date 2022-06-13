@@ -18,10 +18,10 @@ class MartPokeballFragment : ViewBindingFragment<FragmentItemListingBinding>() {
     override fun setup() = with(binding) {
         val pokeballAdapter = PokeballListAdapter(
             onPokeballClicked = {
-                viewModel.purchasePokeball(
+                viewModel.buyPokeball(
                     pokeball = it,
                     onSuccess = { "You purchased ${it.name} x1!".snack() },
-                    onFailed = { "You don't have enough Poke-Coins!".snack() }
+                    onError = { msg -> msg.snack() }
                 )
             })
         list.layoutManager = GridLayoutManager(requireContext(), 2)

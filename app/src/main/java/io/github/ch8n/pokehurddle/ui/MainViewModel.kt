@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.ch8n.pokehurddle.data.models.*
 import io.github.ch8n.pokehurddle.data.usecases.PlayerStatsUseCase
+import io.github.ch8n.pokehurddle.data.usecases.PokemonMartUseCase
 import io.github.ch8n.pokehurddle.data.usecases.PokemonWorldUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -16,34 +17,56 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val playerStatsUseCase: PlayerStatsUseCase,
     private val pokemonWorldUseCase: PokemonWorldUseCase,
+    private val pokemartUseCase: PokemonMartUseCase,
 ) : ViewModel() {
 
-    // we cache pokemon of the day to be stored till instance of viewmodel is alive
-    private val _martPokemon = MutableStateFlow<Pokemon?>(null)
-    // public read only state of mart pokemon
-    val martPokemon = _martPokemon.asStateFlow()
+    val playerStats = playerStatsUseCase.observerPlayer()
 
-    init {
-        // get random pokemon
-        getPokemonOfTheDay()
-    }
-
-    fun getPokemonOfTheDay() {
-        // get random pokemon on update mart pokemon state flow
-        pokemonWorldUseCase.getRandomPokemon()
-            .catch { e -> Log.e("Error", "failed pokemon", e) }
-            .onEach { _martPokemon.emit(it) }
+    fun getPokemonOfTheDay(
+        onSuccess: (pokemon: Pokemon) -> Unit,
+        onError: () -> Unit
+    ) {
+        pokemartUseCase.getPokemonOfTheDay()
+            .catch { error ->
+                Log.e("Error", "failed pokemon", error)
+                onError.invoke()
+            }
+            .onEach { onSuccess.invoke(it) }
             .launchIn(viewModelScope)
     }
 
-    val playerStats = playerStatsUseCase.observerPlayer()
+    fun buyPokemon(pokemon: Pokemon, onSuccess: () -> Unit, onError: (msg: String) -> Unit) =
+        viewModelScope.launch {
+            pokemartUseCase.purchasePokemon(
+                pokemon = pokemon,
+                onSuccess = onSuccess,
+                onError = onError
+            )
+        }
+
+    fun buyPokeball(pokeball: Pokeball, onSuccess: () -> Unit, onError: (msg: String) -> Unit) =
+        viewModelScope.launch {
+            pokemartUseCase.purchasePokeball(
+                pokeball = pokeball,
+                onSuccess = onSuccess,
+                onError = onError
+            )
+        }
+
+    fun buyBerry(berry: Berries, onSuccess: () -> Unit, onError: (msg: String) -> Unit) =
+        viewModelScope.launch {
+            pokemartUseCase.purchaseBerry(
+                berry = berry,
+                onSuccess = onSuccess,
+                onError = onError
+            )
+        }
 
     private val _isBattleEscaped = MutableStateFlow<Boolean>(false)
     val isBattleEscaped = _isBattleEscaped.asStateFlow()
 
     private val _pokemonEncountered = MutableStateFlow<Pokemon?>(null)
     val pokemonEncountered = _pokemonEncountered.asStateFlow()
-
 
     fun generateRandomEncounter(
         onLoading: (isLoading: Boolean) -> Unit,
@@ -167,59 +190,6 @@ class MainViewModel @Inject constructor(
         onLostBerry.invoke(Berries.valueOf(berry), lossValue)
     }
 
-    fun purchaseBerry(berry: Berries, onSuccess: () -> Unit, onFailed: () -> Unit) =
-        viewModelScope.launch {
-            kotlin.runCatching {
-                val playerStats = playerStats.first()
-                if (playerStats.coins >= berry.price) {
-                    val updatedQty = (playerStats.berries.get(berry.name) ?: 0) + 1
-                    playerStatsUseCase.updatePlayerBerries(berry.name, updatedQty)
-                    val remainingCoins = playerStats.coins - berry.price
-                    playerStatsUseCase.updatePlayerCoins(money = remainingCoins)
-                    onSuccess.invoke()
-                } else {
-                    onFailed.invoke()
-                }
-            }.getOrElse {
-                onFailed.invoke()
-            }
-        }
-
-    fun purchasePokeball(pokeball: Pokeball, onSuccess: () -> Unit, onFailed: () -> Unit) =
-        viewModelScope.launch {
-            kotlin.runCatching {
-                val playerStats = playerStats.first()
-                if (playerStats.coins >= pokeball.price) {
-                    val updatedQty = (playerStats.pokeballs.get(pokeball.name) ?: 0) + 1
-                    playerStatsUseCase.updatePlayerPokeballs(pokeball.name, updatedQty)
-                    val remainingCoins = playerStats.coins - pokeball.price
-                    playerStatsUseCase.updatePlayerCoins(money = remainingCoins)
-                    onSuccess.invoke()
-                } else {
-                    onFailed.invoke()
-                }
-            }.getOrElse {
-                onFailed.invoke()
-            }
-        }
-
-    fun purchasePokemon(onSuccess: () -> Unit, onFailed: () -> Unit) =
-        viewModelScope.launch {
-            kotlin.runCatching {
-                val playerStats = playerStats.first()
-                val pokemon = martPokemon.value ?: return@launch onFailed.invoke()
-                if (playerStats.coins >= pokemon.health) {
-                    playerStatsUseCase.updatePlayerPokemon(pokemon)
-                    val remainingCoins = playerStats.coins - pokemon.health
-                    playerStatsUseCase.updatePlayerCoins(money = remainingCoins)
-                    onSuccess.invoke()
-                } else {
-                    onFailed.invoke()
-                }
-            }.getOrElse {
-                onFailed.invoke()
-            }
-        }
 
     fun throwBerry(
         berry: Berries,

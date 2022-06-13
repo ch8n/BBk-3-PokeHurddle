@@ -18,11 +18,9 @@ class MartBerriesFragment : ViewBindingFragment<FragmentItemListingBinding>() {
     override fun setup() = with(binding) {
         val berriesAdapter = BerriesListAdapter(
             onBerryClicked = {
-                viewModel.purchaseBerry(
+                viewModel.buyBerry(
                     berry = it,
-                    onFailed = {
-                        "You don't have enough Poke-Coins!".snack()
-                    },
+                    onError = { msg -> msg.snack() },
                     onSuccess = {
                         "You purchased ${it.name} x1!".snack()
                     }
