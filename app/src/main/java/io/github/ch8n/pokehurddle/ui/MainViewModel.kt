@@ -1,6 +1,5 @@
 package io.github.ch8n.pokehurddle.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,21 +19,26 @@ class MainViewModel @Inject constructor(
     private val pokemartUseCase: PokemonMartUseCase,
 ) : ViewModel() {
 
+    // player status observer usecase
     val playerStats = playerStatsUseCase.observerPlayer()
 
+    // delegate to fetch pokemon of the day usecase
     fun getPokemonOfTheDay(
+        // callback for operation success
         onSuccess: (pokemon: Pokemon) -> Unit,
-        onError: () -> Unit
+        // callback for operation error
+        onError: (msg: String) -> Unit
     ) {
         pokemartUseCase.getPokemonOfTheDay()
-            .catch { error ->
-                Log.e("Error", "failed pokemon", error)
-                onError.invoke()
-            }
-            .onEach { onSuccess.invoke(it) }
+            // on error trigger onError callback
+            .catch { error -> onError.invoke(error.message ?: "Something went wrong!") }
+            // on Each trigger success callback
+            .onEach { pokemon -> onSuccess.invoke(pokemon) }
+            // start flow on viewmodel scope
             .launchIn(viewModelScope)
     }
 
+    // delegate to purchase pokemon usecase
     fun buyPokemon(pokemon: Pokemon, onSuccess: () -> Unit, onError: (msg: String) -> Unit) =
         viewModelScope.launch {
             pokemartUseCase.purchasePokemon(
@@ -44,6 +48,7 @@ class MainViewModel @Inject constructor(
             )
         }
 
+    // delegate to purchase pokeball usecase
     fun buyPokeball(pokeball: Pokeball, onSuccess: () -> Unit, onError: (msg: String) -> Unit) =
         viewModelScope.launch {
             pokemartUseCase.purchasePokeball(
@@ -53,6 +58,7 @@ class MainViewModel @Inject constructor(
             )
         }
 
+    // delegate to purchase berry usecase
     fun buyBerry(berry: Berries, onSuccess: () -> Unit, onError: (msg: String) -> Unit) =
         viewModelScope.launch {
             pokemartUseCase.purchaseBerry(
