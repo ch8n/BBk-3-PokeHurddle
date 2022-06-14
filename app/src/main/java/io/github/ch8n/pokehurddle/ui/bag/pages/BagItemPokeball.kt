@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.ch8n.pokehurddle.databinding.FragmentItemListingBinding
+import io.github.ch8n.pokehurddle.databinding.FragmentListBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListItemAdapter
 import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListType
@@ -13,7 +13,7 @@ import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class BagItemPokeballFragment : ViewBindingFragment<FragmentItemListingBinding>() {
+class BagItemPokeballFragment : ViewBindingFragment<FragmentListBinding>() {
 
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -27,6 +27,6 @@ class BagItemPokeballFragment : ViewBindingFragment<FragmentItemListingBinding>(
         }
     }
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentItemListingBinding
-        get() = FragmentItemListingBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentListBinding
+        get() = FragmentListBinding::inflate
 }
