@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.databinding.FragmentBattleItemsBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
-import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListItemAdapter
-import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListType
+import io.github.ch8n.pokehurddle.ui.bag.adapters.BagPokeBallAdapter
 import io.github.ch8n.pokehurddle.ui.catchPokemon.CatchPokemonFragment
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import kotlinx.coroutines.flow.collect
@@ -20,9 +19,8 @@ class PokeballBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>()
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun setup(): Unit = with(binding) {
-        val adapter = BagListItemAdapter(
-            type = BagListType.POKE_BALL,
-            onBallClicked = { pokeball ->
+        val adapter = BagPokeBallAdapter(
+            onPokeballClicked = { pokeball ->
                 if (parentFragment is CatchPokemonFragment) {
                     val catchFragment = parentFragment as CatchPokemonFragment
                     catchFragment.showSnack("You used ${pokeball.name}!")
@@ -40,7 +38,7 @@ class PokeballBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>()
         listBattleItems.adapter = adapter
         lifecycleScope.launchWhenResumed {
             viewModel.playerStats.collect {
-                adapter.setPlayerStats(it)
+                adapter.setPlayerPokeball(it.pokeballs)
             }
         }
     }

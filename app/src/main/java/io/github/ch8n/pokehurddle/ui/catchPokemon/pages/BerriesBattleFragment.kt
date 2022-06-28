@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.databinding.FragmentBattleItemsBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
-import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListItemAdapter
-import io.github.ch8n.pokehurddle.ui.bag.adapters.BagListType
+import io.github.ch8n.pokehurddle.ui.bag.adapters.BagBerriesAdapter
 import io.github.ch8n.pokehurddle.ui.catchPokemon.CatchPokemonFragment
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import kotlinx.coroutines.flow.collect
@@ -20,8 +19,7 @@ class BerriesBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>() 
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun setup(): Unit = with(binding) {
-        val adapter = BagListItemAdapter(
-            type = BagListType.POKE_BERRY,
+        val adapter = BagBerriesAdapter(
             onBerryClicked = { berry ->
                 if (requireParentFragment() is CatchPokemonFragment) {
                     val catchFragment = parentFragment as CatchPokemonFragment
@@ -41,7 +39,7 @@ class BerriesBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>() 
         listBattleItems.adapter = adapter
         lifecycleScope.launchWhenResumed {
             viewModel.playerStats.collect {
-                adapter.setPlayerStats(it)
+                adapter.setPlayerBerries(it.berries)
             }
         }
     }

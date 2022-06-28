@@ -51,7 +51,7 @@ class GetPokemonOfTheDayUseCase @Inject constructor(
             emit(pokemon)
             return@flow
         }
-        //👇 else error has happend emit error to flow
+        //👇 else error has happened emit error to flow
         error("Failed to fetch Pokemon...")
     }
 }
