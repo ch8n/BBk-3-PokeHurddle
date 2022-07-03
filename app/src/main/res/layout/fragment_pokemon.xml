@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/green1">
 
+    <!-- 👇 background forest -->
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -16,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/explore_bg" />
 
-
+    <!-- 👇 Image Icon Mobile Pokemon -->
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_pokemon"
         android:layout_width="120dp"
@@ -27,6 +28,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/pokemons" />
 
+    <!-- 👇 label my pokemon -->
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/label_pokemon"
         android:layout_width="wrap_content"
@@ -35,17 +37,19 @@
         android:fontFamily="@font/poppins_regular"
         android:scrollbars="vertical"
         android:text="My Pokemon"
+        android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_pokemon" />
 
+    <!-- 👇 Grid of Pokemons -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/grid_pokemon"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/green1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
