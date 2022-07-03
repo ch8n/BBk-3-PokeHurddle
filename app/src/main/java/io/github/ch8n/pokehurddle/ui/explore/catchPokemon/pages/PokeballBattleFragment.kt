@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.ui.catchPokemon.pages
+package io.github.ch8n.pokehurddle.ui.explore.catchPokemon.pages
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.databinding.FragmentBattleItemsBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.bag.adapters.BagPokeBallAdapter
-import io.github.ch8n.pokehurddle.ui.catchPokemon.CatchPokemonFragment
+import io.github.ch8n.pokehurddle.ui.explore.catchPokemon.CatchPokemonFragment
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import kotlinx.coroutines.flow.collect
 

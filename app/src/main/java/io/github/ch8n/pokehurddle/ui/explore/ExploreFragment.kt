@@ -8,6 +8,8 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.R
+import io.github.ch8n.pokehurddle.data.models.Berries
+import io.github.ch8n.pokehurddle.data.models.Pokeball
 import io.github.ch8n.pokehurddle.data.models.Pokemon
 import io.github.ch8n.pokehurddle.databinding.FragmentExploreBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
@@ -23,19 +25,55 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
 
     private val viewModel: MainViewModel by activityViewModels()
 
-    private fun FragmentExploreBinding.displayPokemon(pokemon: Pokemon) {
+    private fun onLoading(isLoading: Boolean) = with(binding) {
+        loader.setVisible(isLoading)
+        btnExplore.isEnabled = !isLoading
+    }
+
+    private fun onNothingHappened(): Unit = with(binding) {
+        containerPokemon.setVisible(false)
+        Glide.with(requireContext())
+            .load(R.drawable.nothing)
+            .into(imgEncounter)
+        labelEncounter.text = "Nothing happened!"
+    }
+
+    private fun onPokeCoinsFound(coins: Int): Unit = with(binding) {
+        containerPokemon.setVisible(false)
+        Glide.with(requireContext())
+            .load(R.drawable.coin)
+            .into(imgEncounter)
+        labelEncounter.text = "You found Coins x$coins!"
+    }
+
+    private fun onPokeballFound(pokeball: Pokeball): Unit = with(binding) {
+        containerPokemon.setVisible(false)
+        Glide.with(requireContext())
+            .load(pokeball.imageUrl)
+            .into(imgEncounter)
+        labelEncounter.text = "You found ${pokeball.name.capitalize()} x1!"
+    }
+
+
+    private fun onPokemonFound(pokemon: Pokemon) = with(binding) {
         containerPokemon.setVisible(true)
         btnExplore.setVisible(false)
-
         Glide.with(requireContext())
             .load(pokemon.imageUrl)
             .into(imgEncounter)
-
         labelEncounter.text = pokemon.name.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(
                 Locale.getDefault()
             ) else it.toString()
         }
+    }
+
+    private fun onBerryFound(berry: Berries, qty: Int): Unit = with(binding) {
+        containerPokemon.setVisible(false)
+        Glide.with(requireContext())
+            .load(berry.imageUrl)
+            .into(imgEncounter)
+        labelEncounter.text = "You found ${berry.name.capitalize()} x${qty}!"
     }
 
     private fun onEscape(message: String) = binding.run {
@@ -62,9 +100,7 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
             }
         }
 
-        btnEscape.setOnClickListener {
-            onEscapingPokemon()
-        }
+        btnEscape.setOnClickListener { onEscapingPokemon() }
 
         btnPet.setOnClickListener {
             lifecycleScope.launchWhenResumed {
@@ -84,46 +120,12 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
 
         btnExplore.setOnClickListener {
             viewModel.generateRandomEncounter(
-                onNothing = {
-                    containerPokemon.setVisible(false)
-                    Glide.with(requireContext())
-                        .load(R.drawable.nothing)
-                        .into(imgEncounter)
-                    labelEncounter.text = "Nothing happened!"
-                },
-                onBerry = { berry, qty ->
-                    containerPokemon.setVisible(false)
-                    Glide.with(requireContext())
-                        .load(berry.imageUrl)
-                        .into(imgEncounter)
-                    labelEncounter.text = "You found ${
-                        berry.name.capitalize()
-                    } x${qty}!"
-                },
-                onPokemon = {
-                    val pokemon = it
-                    displayPokemon(pokemon)
-                },
-                onPokeball = { pokeball ->
-                    containerPokemon.setVisible(false)
-                    Glide.with(requireContext())
-                        .load(pokeball.imageUrl)
-                        .into(imgEncounter)
-                    labelEncounter.text = "You found ${
-                        pokeball.name.capitalize()
-                    } x1!"
-                },
-                onMoney = { coins ->
-                    containerPokemon.setVisible(false)
-                    Glide.with(requireContext())
-                        .load(R.drawable.coin)
-                        .into(imgEncounter)
-                    labelEncounter.text = "You found Coins x$coins!"
-                },
-                onLoading = { isLoading ->
-                    loader.setVisible(isLoading)
-                    btnExplore.isEnabled = !isLoading
-                }
+                onNothing = { onNothingHappened() },
+                onBerry = { berry, qty -> onBerryFound(berry, qty) },
+                onPokemon = { pokemon -> onPokemonFound(pokemon) },
+                onPokeball = { pokeball -> onPokeballFound(pokeball) },
+                onMoney = { coins -> onPokeCoinsFound(coins) },
+                onLoading = { isLoading -> onLoading(isLoading) }
             )
         }
     }

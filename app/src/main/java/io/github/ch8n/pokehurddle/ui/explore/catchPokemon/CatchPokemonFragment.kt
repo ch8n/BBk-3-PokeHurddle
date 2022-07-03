@@ -1,4 +1,4 @@
-package io.github.ch8n.pokehurddle.ui.catchPokemon
+package io.github.ch8n.pokehurddle.ui.explore.catchPokemon
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,8 +12,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.ch8n.pokehurddle.data.models.Pokeball
 import io.github.ch8n.pokehurddle.databinding.FragmentPetBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
-import io.github.ch8n.pokehurddle.ui.catchPokemon.pages.BerriesBattleFragment
-import io.github.ch8n.pokehurddle.ui.catchPokemon.pages.PokeballBattleFragment
+import io.github.ch8n.pokehurddle.ui.explore.catchPokemon.pages.BerriesBattleFragment
+import io.github.ch8n.pokehurddle.ui.explore.catchPokemon.pages.PokeballBattleFragment
 import io.github.ch8n.pokehurddle.ui.utils.AppPagerAdapter
 import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import kotlinx.coroutines.delay
@@ -65,7 +65,9 @@ class CatchPokemonFragment : ViewBindingFragment<FragmentPetBinding>() {
         val isCaptured = (100 - fillPercent) <= ball.captureRate
         val msg = if (isCaptured) "Gotcha!!" else "Pokemon Ran away!"
         val snack = msg.snack(snackContainer)
-        if (isCaptured) { viewModel.captureEncounteredPokemon() }
+        if (isCaptured) {
+            viewModel.captureEncounteredPokemon()
+        }
         lifecycleScope.launchWhenResumed {
             delay(1000)
             snack.dismiss()

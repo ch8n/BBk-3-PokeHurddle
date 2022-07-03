@@ -1,5 +1,6 @@
 package io.github.ch8n.pokehurddle.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -94,7 +95,10 @@ class MainViewModel @Inject constructor(
                     Encounter.Pokemon -> showPokemon(playerStats, onPokemon)
                 }
             }
-            .catch { onNothing.invoke() }
+            .catch { error ->
+                Log.e("Error", error.localizedMessage)
+                onNothing.invoke()
+            }
             .onCompletion { onLoading.invoke(false) }
             .launchIn(viewModelScope)
     }
