@@ -75,6 +75,26 @@ class MainViewModel @Inject constructor(
     private val _pokemonEncountered = MutableStateFlow<Pokemon?>(null)
     val pokemonEncountered = _pokemonEncountered.asStateFlow()
 
+    fun isReadyForBattle(
+        onReady: () -> Unit,
+        onError: (msg: String) -> Unit
+    ) = viewModelScope.launch {
+        val playerStats =
+            playerStats.firstOrNull() ?: return@launch onError("Something went wrong!")
+        val isPokeballPresent = playerStats.pokeballs.values.sum() > 0
+        val isBerriePresent = playerStats.berries.values.sum() > 0
+        if (isPokeballPresent && isBerriePresent) {
+            onReady.invoke()
+        } else {
+            val msg = when {
+                !isPokeballPresent -> "you don't have any Pokeball"
+                !isBerriePresent -> "you don't have any berries"
+                else -> "Something went wrong!"
+            }
+            onError.invoke(msg)
+        }
+    }
+
     fun generateRandomEncounter(
         onLoading: (isLoading: Boolean) -> Unit,
         onNothing: () -> Unit,
@@ -162,8 +182,9 @@ class MainViewModel @Inject constructor(
                     Encounter.Pokemon -> onEscapeNoLoss.invoke()
                 }
             }
-            .catch { onEscapeNoLoss.invoke() }
-            .onCompletion { onEscapeNoLoss.invoke() }
+            .catch {
+                onEscapeNoLoss.invoke()
+            }
             .launchIn(viewModelScope)
     }
 

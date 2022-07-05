@@ -76,7 +76,7 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
         labelEncounter.text = "You found ${berry.name.capitalize()} x${qty}!"
     }
 
-    private fun onEscape(message: String) = binding.run {
+    private fun onEscape(message: String) = with(binding) {
         containerPokemon.setVisible(false)
         imgEncounter.setImageResource(R.drawable.escape)
         labelEncounter.text = message
@@ -103,19 +103,12 @@ class ExploreFragment : ViewBindingFragment<FragmentExploreBinding>() {
         btnEscape.setOnClickListener { onEscapingPokemon() }
 
         btnPet.setOnClickListener {
-            lifecycleScope.launchWhenResumed {
-                val playerStats = viewModel.playerStats.firstOrNull() ?: return@launchWhenResumed
-                val isPokeballPresent = playerStats.pokeballs.values.sum() > 0
-                val isBerriePresent = playerStats.berries.values.sum() > 0
-                if (isPokeballPresent && isBerriePresent) {
+            viewModel.isReadyForBattle(
+                onReady = {
                     findNavController().navigate(R.id.action_exploreFragment_to_petFragment)
-                } else {
-                    when {
-                        !isPokeballPresent -> "you don't have any Pokeball".snack(btnPet)
-                        !isBerriePresent -> "you don't have any berries".snack(btnPet)
-                    }
-                }
-            }
+                },
+                onError = { msg -> msg.snack(btnPet) }
+            )
         }
 
         btnExplore.setOnClickListener {
