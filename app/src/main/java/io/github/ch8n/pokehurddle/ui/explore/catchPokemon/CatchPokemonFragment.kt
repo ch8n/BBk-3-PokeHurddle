@@ -26,31 +26,45 @@ class CatchPokemonFragment : ViewBindingFragment<FragmentPetBinding>() {
 
     override fun setup(): Unit = with(binding) {
 
-        val pokemonInBattle = viewModel.pokemonEncountered.value ?: return
+        // get pokemon
+        val pokemonInBattle = viewModel.pokemonEncountered.value ?: kotlin.run {
+            findNavController().popBackStack()
+            return
+        }
 
+        // apply pager to adapter
         val adapter = AppPagerAdapter(
+            // child fragment manager
             fragmentManager = childFragmentManager,
+            // apply lifecycle
             lifecycle = lifecycle,
+            // add fragments to pagers
             "Berries" to BerriesBattleFragment(),
             "PokeBalls" to PokeballBattleFragment()
         )
 
+        // attach pager to adapter
         pagerItems.adapter = adapter
 
+        // attach tabs
         TabLayoutMediator(tabs, pagerItems) { tab, position ->
             tab.text = adapter.getTitle(position)
         }.attach()
 
+        // load image of pokemon
         Glide.with(requireContext())
             .load(pokemonInBattle.imageUrl)
             .into(imgPokemon)
 
+        // apply pokemon name
         labelPokemon.text = pokemonInBattle.name
-        progressLove.max = pokemonInBattle.health
+        // apply pokemon health
+        progressHealth.max = pokemonInBattle.health
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val snack =
-                "You tried to escape from ${pokemonInBattle.name}".snack(binding.snackContainer)
+            // if user back press it will be counted as escape
+            val snack = "You tried to escape from ${pokemonInBattle.name}".snack(binding.tabs)
+            // set battle escape true
             viewModel.setBattleEscaped(true)
             lifecycleScope.launchWhenResumed {
                 delay(1000)
@@ -60,28 +74,41 @@ class CatchPokemonFragment : ViewBindingFragment<FragmentPetBinding>() {
         }
     }
 
+    // calculate changes to catch pokemon
     fun catchSuccess(ball: Pokeball) = with(binding) {
-        val fillPercent = (progressLove.progress.toFloat() / progressLove.max.toFloat()) * 100
-        val isCaptured = (100 - fillPercent) <= ball.captureRate
-        val msg = if (isCaptured) "Gotcha!!" else "Pokemon Ran away!"
-        val snack = msg.snack(snackContainer)
-        if (isCaptured) {
-            viewModel.captureEncounteredPokemon()
-        }
         lifecycleScope.launchWhenResumed {
+            // delay to show toast message
+            delay(500)
+            val fillPercent = (progressHealth.progress.toFloat() / progressHealth.max.toFloat()) * 100
+            // if health is less than capture rate capture the pokemon
+            val isCaptured = (100 - fillPercent) <= ball.captureRate
+            val msg = if (isCaptured) "Gotcha!!" else "Pokemon Ran away!"
+            // show message
+            val snack = msg.snack(tabs)
+            if (isCaptured) {
+                // if captured save pokemon
+                viewModel.captureEncounteredPokemon()
+            }
+            // put delay to show message
             delay(1000)
             snack.dismiss()
+            // pop back to explore screen
             findNavController().popBackStack()
         }
     }
 
-    fun updateStatus(percent: Int) = binding.run {
+    // reduce pokemon health
+    fun updatePokemonAttraction(percent: Int) = binding.run {
+        // calculate likeness
         val likeness = randomLikeness(percent)
+        // show message according to likeness
         val likenessMessage = if (likeness > 0) "Great! I loved it..." else "Yukk.. it's sour.."
         binding.lablePokemonSpeak.text = likenessMessage
-        progressLove.progress = progressLove.progress + likeness
+        // update health bar
+        progressHealth.progress = progressHealth.progress + likeness
     }
 
+    // randomize likeness
     private fun randomLikeness(amount: Int): Int {
         return when ((1..100).random()) {
             in 70..100 -> -1 * (amount / 2)
@@ -89,8 +116,9 @@ class CatchPokemonFragment : ViewBindingFragment<FragmentPetBinding>() {
         }
     }
 
+    // show snackbar over tabs
     fun showSnack(msg: String) {
-        msg.snack(binding.snackContainer)
+        msg.snack(binding.tabs)
     }
 
     override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentPetBinding

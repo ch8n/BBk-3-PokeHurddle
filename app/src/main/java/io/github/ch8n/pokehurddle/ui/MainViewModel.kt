@@ -222,9 +222,9 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun throwBerry(
+    fun canThrowBerry(
         berry: Berries,
-        onSuccess: (percent: Int) -> Unit,
+        throwBerry: (percent: Int) -> Unit,
         onFailed: () -> Unit
     ) = viewModelScope.launch {
         val playerStats = playerStats.first()
@@ -232,7 +232,7 @@ class MainViewModel @Inject constructor(
         val qty = playerStats.berries.get(berry.name) ?: 0
         if (qty > 0) {
             val percent = pokemon.health / berry.tastePoints
-            onSuccess.invoke(percent)
+            throwBerry.invoke(percent)
             val updatedQty = qty - 1
             playerStatsUseCase.updatePlayerBerries(berry.name, updatedQty)
         } else {
@@ -240,15 +240,14 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun throwBall(ball: Pokeball, onSuccess: () -> Unit, onFailed: () -> Unit) =
+    fun canThrowBall(ball: Pokeball, throwBall: () -> Unit, onFailed: () -> Unit) =
         viewModelScope.launch {
-            delay(500)
             val playerStats = playerStats.first()
             val qty = playerStats.pokeballs.get(ball.name) ?: 0
             if (qty > 0) {
-                onSuccess.invoke()
                 val updatedQty = qty - 1
                 playerStatsUseCase.updatePlayerPokeballs(ball.name, updatedQty)
+                throwBall.invoke()
             } else {
                 onFailed.invoke()
             }

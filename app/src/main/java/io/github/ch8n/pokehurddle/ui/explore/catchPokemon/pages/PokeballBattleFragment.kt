@@ -4,9 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.ch8n.pokehurddle.databinding.FragmentBattleItemsBinding
+import io.github.ch8n.pokehurddle.databinding.FragmentListBinding
 import io.github.ch8n.pokehurddle.ui.MainViewModel
 import io.github.ch8n.pokehurddle.ui.bag.adapters.BagPokeBallAdapter
 import io.github.ch8n.pokehurddle.ui.explore.catchPokemon.CatchPokemonFragment
@@ -14,7 +13,7 @@ import io.github.ch8n.pokehurddle.ui.utils.ViewBindingFragment
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class PokeballBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>() {
+class PokeballBattleFragment : ViewBindingFragment<FragmentListBinding>() {
 
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -24,9 +23,10 @@ class PokeballBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>()
                 if (parentFragment is CatchPokemonFragment) {
                     val catchFragment = parentFragment as CatchPokemonFragment
                     catchFragment.showSnack("You used ${pokeball.name}!")
-                    viewModel.throwBall(
+                    viewModel.canThrowBall(
                         ball = pokeball,
-                        onSuccess = {
+                        throwBall = {
+                            catchFragment.showSnack("Throwing ${pokeball.name}...")
                             catchFragment.catchSuccess(pokeball)
                         },
                         onFailed = { catchFragment.showSnack("You don't have this PokeBall") }
@@ -34,8 +34,7 @@ class PokeballBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>()
                 }
             }
         )
-        listBattleItems.layoutManager = LinearLayoutManager(requireContext())
-        listBattleItems.adapter = adapter
+        list.adapter = adapter
         lifecycleScope.launchWhenResumed {
             viewModel.playerStats.collect {
                 adapter.setPlayerPokeball(it.pokeballs)
@@ -44,7 +43,7 @@ class PokeballBattleFragment : ViewBindingFragment<FragmentBattleItemsBinding>()
     }
 
 
-    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentBattleItemsBinding
-        get() = FragmentBattleItemsBinding::inflate
+    override val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> FragmentListBinding
+        get() = FragmentListBinding::inflate
 
 }
